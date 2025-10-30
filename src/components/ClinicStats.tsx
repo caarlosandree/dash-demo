@@ -6,14 +6,135 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import AgendamentosTable from './AgendamentosTable';
+import PresencasModal from './PresencasModal';
+
+interface Agendamento {
+  id: number;
+  data: string;
+  dataTimestamp: number;
+  paciente: string;
+  status: 'Presença' | 'Falta' | 'Reagendado';
+  profissional: string;
+  procedimento: string;
+}
 
 const ClinicStats: React.FC = () => {
-  // Dados mockados para demonstração
+  // Estados para o modal
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<'Presença' | 'Falta'>('Presença');
+
+  // Função para gerar dados mockados de agendamentos
+  const generateMockAgendamentos = (): Agendamento[] => {
+    const pacientes = [
+      'Maria Silva', 'Pedro Oliveira', 'Ana Paula', 'Roberto Fernandes', 'Fernanda Souza',
+      'Lucas Rodrigues', 'Juliana Martins', 'Marcos Antonio', 'Carla Mendes', 'Thiago Silva',
+      'Patricia Costa', 'Ricardo Alves', 'Beatriz Santos', 'Gabriel Lima', 'Isabela Ferreira',
+      'Rodrigo Pereira', 'Amanda Rocha', 'Felipe Souza', 'Mariana Oliveira', 'Bruno Carvalho',
+      'Larissa Gomes', 'Vinicius Reis', 'Camila Ribeiro', 'Gustavo Dias', 'Laura Martins',
+      'Fernando Nunes', 'Priscila Barros', 'Eduardo Monteiro', 'Renata Freitas', 'Andre Coelho',
+      'Daniela Ramos', 'Diego Araujo', 'Sabrina Moura', 'Leandro Teixeira', 'Tatiana Cunha',
+      'Henrique Lopes', 'Vanessa Cardoso', 'Rafael Torres', 'Juliana Duarte', 'Marcelo Pinto',
+      'Thais Correia', 'Igor Barbosa', 'Raquel Farias', 'Paulo Mendonça', 'Aline Nascimento',
+      'Giovanni Castro', 'Bruna Cavalcanti', 'Leonardo Pires', 'Monique Azevedo', 'Samuel Correia',
+    ];
+
+    const profissionais = [
+      'Dr. João Santos', 'Dra. Ana Costa', 'Dr. Carlos Mendes', 'Dra. Juliana Lima',
+      'Dr. Rafael Alves', 'Dra. Patricia Santos', 'Dr. Marcos Silva', 'Dra. Fernanda Souza',
+      'Dr. Lucas Oliveira', 'Dra. Beatriz Costa', 'Dr. Gustavo Lima', 'Dra. Camila Rodrigues',
+    ];
+
+    const procedimentos = [
+      'Consulta Cardiológica', 'Consulta Dermatológica', 'Exame de Sangue', 'Consulta Clínica Geral',
+      'Consulta Ortopédica', 'Consulta Psicológica', 'Consulta Oftalmológica', 'Consulta Neurológica',
+      'Consulta Pediátrica', 'Consulta Ginecológica', 'Consulta Urologia', 'Consulta Endocrinologia',
+      'Consulta Gastroenterologia', 'Consulta Pneumologia', 'Consulta Reumatologia', 'Raio-X',
+      'Ultrassonografia', 'Ecocardiograma', 'Eletrocardiograma', 'Teste Ergométrico',
+    ];
+
+    const agendamentos: Agendamento[] = [];
+    const hoje = new Date();
+    
+    // Gerar 200 agendamentos distribuídos nos últimos 3 meses
+    // Distribuição: ~75% presenças, ~20% faltas, ~5% reagendados
+    for (let i = 1; i <= 200; i++) {
+      const diasAtras = Math.floor(Math.random() * 90);
+      const data = new Date(hoje);
+      data.setDate(data.getDate() - diasAtras);
+      
+      const hora = Math.floor(Math.random() * 8) + 8;
+      const minuto = Math.random() > 0.5 ? 0 : 30;
+      data.setHours(hora, minuto, 0, 0);
+
+      const dia = String(data.getDate()).padStart(2, '0');
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const ano = data.getFullYear();
+      const horaFormatada = String(data.getHours()).padStart(2, '0');
+      const minutoFormatado = String(data.getMinutes()).padStart(2, '0');
+
+      // Distribuição de status
+      const rand = Math.random();
+      let status: 'Presença' | 'Falta' | 'Reagendado';
+      if (rand < 0.75) {
+        status = 'Presença';
+      } else if (rand < 0.95) {
+        status = 'Falta';
+      } else {
+        status = 'Reagendado';
+      }
+
+      agendamentos.push({
+        id: i,
+        data: `${dia}/${mes}/${ano} ${horaFormatada}:${minutoFormatado}`,
+        dataTimestamp: data.getTime(),
+        paciente: pacientes[Math.floor(Math.random() * pacientes.length)],
+        status,
+        profissional: profissionais[Math.floor(Math.random() * profissionais.length)],
+        procedimento: procedimentos[Math.floor(Math.random() * procedimentos.length)],
+      });
+    }
+
+    return agendamentos.sort((a, b) => b.dataTimestamp - a.dataTimestamp);
+  };
+
+  const todosAgendamentos = useMemo(() => generateMockAgendamentos(), []);
+
+  // Calcular totais baseados nos agendamentos gerados
+  const totalAgendamentosCalculado = todosAgendamentos.length;
+  const totalPresencasCalculado = todosAgendamentos.filter(a => a.status === 'Presença').length;
+  const totalFaltasCalculado = todosAgendamentos.filter(a => a.status === 'Falta').length;
+  const totalReagendamentosCalculado = todosAgendamentos.filter(a => a.status === 'Reagendado').length;
+
+  // Dados mockados para demonstração (usar os calculados ou valores fixos)
   const totalAgendamentos = 1247;
-  const totalPresencas = 934;
-  const totalFaltas = 245;
-  const totalReagendamentos = 68;
+  const totalPresencas = totalPresencasCalculado || 934;
+  const totalFaltas = totalFaltasCalculado || 245;
+  const totalReagendamentos = totalReagendamentosCalculado || 68;
+
+  // Filtrar agendamentos por status para o modal
+  const agendamentosPresenca = useMemo(() => {
+    return todosAgendamentos.filter(a => a.status === 'Presença');
+  }, [todosAgendamentos]);
+
+  const agendamentosFalta = useMemo(() => {
+    return todosAgendamentos.filter(a => a.status === 'Falta');
+  }, [todosAgendamentos]);
+
+  // Handlers para o modal
+  const handleItemClick = (_event: any, itemIdentifier: any) => {
+    const itemIndex = itemIdentifier?.dataIndex ?? itemIdentifier?.itemIndex ?? itemIdentifier?.index;
+    const clickedItem = dadosPieChart.find((item) => item.id === itemIndex);
+    if (clickedItem && (clickedItem.label === 'Presenças' || clickedItem.label === 'Faltas')) {
+      setSelectedStatus(clickedItem.label as 'Presença' | 'Falta');
+      setOpenModal(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
   const faltasPorDiaSemana = [
     { dia: 'Seg', faltas: 32 },
@@ -346,6 +467,10 @@ const ClinicStats: React.FC = () => {
               borderRadius: 2,
               p: 2,
               border: '1px solid rgba(0, 0, 0, 0.05)',
+              cursor: 'pointer',
+              '&:hover': {
+                bgcolor: '#f1f5f9',
+              },
             }}>
               <MuiPieChart
                 series={[
@@ -357,6 +482,9 @@ const ClinicStats: React.FC = () => {
                     cornerRadius: 5,
                     startAngle: -90,
                     endAngle: 270,
+                    onClick: handleItemClick,
+                    highlightScope: { faded: 'global', highlighted: 'item' },
+                    faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
                   },
                 ]}
                 colors={['#10b981', '#ef4444']}
@@ -364,10 +492,26 @@ const ClinicStats: React.FC = () => {
                 height={300}
               />
             </Box>
+            <Typography
+              variant="caption"
+              sx={{
+                color: '#64748b',
+                fontSize: '0.75rem',
+                mt: 1,
+                display: 'block',
+                textAlign: 'center',
+              }}
+            >
+              Clique na fatia para ver detalhes
+            </Typography>
 
             {/* Legenda */}
             <Stack spacing={1.5} sx={{ mt: 2 }}>
               <Box
+                onClick={() => {
+                  setSelectedStatus('Presença');
+                  setOpenModal(true);
+                }}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
@@ -376,6 +520,12 @@ const ClinicStats: React.FC = () => {
                   bgcolor: '#10b98115',
                   borderRadius: 1.5,
                   border: '1px solid #10b98130',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    bgcolor: '#10b98125',
+                    transform: 'translateX(4px)',
+                  },
                 }}
               >
                 <Stack direction="row" spacing={1} alignItems="center">
@@ -397,6 +547,10 @@ const ClinicStats: React.FC = () => {
               </Box>
 
               <Box
+                onClick={() => {
+                  setSelectedStatus('Falta');
+                  setOpenModal(true);
+                }}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
@@ -405,6 +559,12 @@ const ClinicStats: React.FC = () => {
                   bgcolor: '#ef444415',
                   borderRadius: 1.5,
                   border: '1px solid #ef444430',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    bgcolor: '#ef444425',
+                    transform: 'translateX(4px)',
+                  },
                 }}
               >
                 <Stack direction="row" spacing={1} alignItems="center">
@@ -428,6 +588,20 @@ const ClinicStats: React.FC = () => {
           </Paper>
         </Grid>
       </Grid>
+
+      {/* Tabela de Agendamentos */}
+      <Box sx={{ mt: 4 }}>
+        <AgendamentosTable />
+      </Box>
+
+      {/* Modal de Detalhes */}
+      <PresencasModal
+        open={openModal}
+        onClose={handleCloseModal}
+        status={selectedStatus}
+        agendamentos={selectedStatus === 'Presença' ? agendamentosPresenca : agendamentosFalta}
+        totalAgendamentos={totalAgendamentos}
+      />
     </Box>
   );
 };
