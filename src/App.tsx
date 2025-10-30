@@ -36,6 +36,7 @@ import SkeletonChart from './components/SkeletonChart';
 import LazyChartWrapper from './components/LazyChartWrapper';
 import ErrorBoundary from './components/ErrorBoundary';
 import BundleAnalyzer from './components/BundleAnalyzer';
+import ThemeTransition from './components/ThemeTransition';
 import { DashboardProvider, useDashboard } from './contexts/DashboardContext';
 import { useLazyCharts } from './hooks/useLazyCharts';
 
@@ -60,9 +61,15 @@ const float = keyframes`
 `;
 
 // Função para criar tema dinâmico
-const getTheme = (mode: 'light' | 'dark') => createTheme({
+const getTheme = (mode: 'light' | 'dark' | 'auto') => {
+  // Se for 'auto', usar a preferência do sistema
+  const actualMode = mode === 'auto' 
+    ? (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    : mode;
+    
+  return createTheme({
   palette: {
-    mode,
+    mode: actualMode,
     primary: {
       main: '#6366f1',
       light: '#818cf8',
@@ -74,12 +81,12 @@ const getTheme = (mode: 'light' | 'dark') => createTheme({
       dark: '#db2777',
     },
     background: {
-      default: mode === 'light' ? '#f8fafc' : '#0f172a',
-      paper: mode === 'light' ? '#ffffff' : '#1e293b',
+      default: actualMode === 'light' ? '#f8fafc' : '#0f172a',
+      paper: actualMode === 'light' ? '#ffffff' : '#1e293b',
     },
     text: {
-      primary: mode === 'light' ? '#1e293b' : '#f1f5f9',
-      secondary: mode === 'light' ? '#64748b' : '#94a3b8',
+      primary: actualMode === 'light' ? '#1e293b' : '#f1f5f9',
+      secondary: actualMode === 'light' ? '#64748b' : '#94a3b8',
     },
   },
   typography: {
@@ -105,7 +112,8 @@ const getTheme = (mode: 'light' | 'dark') => createTheme({
   shape: {
     borderRadius: 16,
   },
-});
+  });
+};
 
 // Componente para seções do dashboard
 const SectionHeader: React.FC<{ 
@@ -257,11 +265,11 @@ const DashboardContent: React.FC = () => {
     setFilters, 
     clearLoading, 
     filteredData,
-    toggleTheme 
+    toggleTheme,
+    setThemeManually
   } = useDashboard();
 
-  const { currentTab, filters, isLoading } = state;
-  const [viewMode, setViewMode] = useState<'grid' | 'list' | 'compact'>('grid');
+  const { currentTab, filters, isLoading, theme } = state;
 
   // Hook para gerenciar lazy loading dos gráficos
   const { preloadChart, isChartLoaded } = useLazyCharts({
@@ -314,6 +322,10 @@ const DashboardContent: React.FC = () => {
     // Simular loading quando filtros mudam
     setTimeout(() => clearLoading(), 800);
   }, [setFilters, clearLoading]);
+
+  const handleThemeChange = useCallback((newTheme: 'light' | 'dark' | 'auto') => {
+    setThemeManually(newTheme);
+  }, [setThemeManually]);
 
   // Parar loading inicial após um tempo
   useEffect(() => {
@@ -463,10 +475,8 @@ const DashboardContent: React.FC = () => {
                   onExport={(type, filename) => {
                     console.log(`Exportando ${type}: ${filename}`);
                   }}
-                  viewMode={viewMode}
-                  onViewModeChange={setViewMode}
-                  theme={state.theme}
-                  onThemeToggle={toggleTheme}
+                  theme={theme}
+                  onThemeChange={handleThemeChange}
                 />
               </Box>
 
@@ -666,7 +676,7 @@ const DashboardContent: React.FC = () => {
           ).length}
         />
 
-      </Box>
+        </Box>
     </ThemeProvider>
   );
 }

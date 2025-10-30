@@ -18,12 +18,10 @@ import {
   Close as CloseIcon,
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
-  LightMode as LightModeIcon,
-  DarkMode as DarkModeIcon,
 } from '@mui/icons-material';
 import FilterPanel from './FilterPanel';
 import ExportPanel from './ExportPanel';
-import ViewModeToggle from './ViewModeToggle';
+import AnimatedThemeToggle from './AnimatedThemeToggle';
 import { FilterState } from './FilterPanel';
 
 interface ToolbarProps {
@@ -37,10 +35,8 @@ interface ToolbarProps {
     type: 'line' | 'bar' | 'pie' | 'area' | 'scatter' | 'radar' | 'gauge' | 'sparkline';
   }>;
   onExport?: (type: string, filename: string) => void;
-  viewMode?: 'grid' | 'list' | 'compact';
-  onViewModeChange?: (mode: 'grid' | 'list' | 'compact') => void;
-  theme?: 'light' | 'dark';
-  onThemeToggle?: () => void;
+  theme?: 'light' | 'dark' | 'auto';
+  onThemeChange?: (theme: 'light' | 'dark' | 'auto') => void;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
@@ -49,10 +45,8 @@ const Toolbar: React.FC<ToolbarProps> = ({
   dashboardElementIds,
   allChartData,
   onExport,
-  viewMode = 'grid',
-  onViewModeChange,
   theme = 'light',
-  onThemeToggle,
+  onThemeChange,
 }) => {
   const [activePanel, setActivePanel] = useState<'none' | 'filters' | 'export'>('none');
   const [expanded, setExpanded] = useState(false);
@@ -104,9 +98,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
           },
         }}
       >
-        <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ width: '100%' }}>
           {/* Lado Esquerdo - Botões de Ação */}
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack direction="row" spacing={1} alignItems="center" sx={{ flexShrink: 0 }}>
             <Tooltip title="Filtros do Dashboard">
               <IconButton
                 onClick={() => handlePanelToggle('filters')}
@@ -143,22 +137,12 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
             <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
 
-            {/* Toggle de Tema */}
-            {onThemeToggle && (
-              <Tooltip title={`Modo ${theme === 'light' ? 'escuro' : 'claro'}`}>
-                <IconButton
-                  onClick={onThemeToggle}
-                  sx={{
-                    color: 'text.secondary',
-                    '&:hover': {
-                      bgcolor: 'action.hover',
-                    },
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  {theme === 'light' ? <DarkModeIcon /> : <LightModeIcon />}
-                </IconButton>
-              </Tooltip>
+            {/* Toggle de Tema Animado */}
+            {onThemeChange && (
+              <AnimatedThemeToggle
+                theme={theme}
+                onThemeChange={onThemeChange}
+              />
             )}
 
             <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
@@ -183,13 +167,6 @@ const Toolbar: React.FC<ToolbarProps> = ({
             />
           </Stack>
 
-          {/* Toggle de Modo de Visualização */}
-          {onViewModeChange && (
-            <ViewModeToggle
-              value={viewMode}
-              onChange={onViewModeChange}
-            />
-          )}
 
           {/* Lado Direito - Controles */}
           <Stack direction="row" spacing={1} alignItems="center">

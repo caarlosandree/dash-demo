@@ -45,7 +45,7 @@ const getInitialTheme = (): { theme: ThemeMode; isManuallySet: boolean } => {
   if (typeof window === 'undefined') return { theme: 'light', isManuallySet: false };
   
   const savedTheme = localStorage.getItem('dashboard-theme');
-  if (savedTheme === 'light' || savedTheme === 'dark') {
+  if (savedTheme === 'light' || savedTheme === 'dark' || savedTheme === 'auto') {
     return { theme: savedTheme, isManuallySet: true };
   }
   
@@ -195,8 +195,8 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({ children }
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     
     const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-      // Só aplica se o usuário não escolheu manualmente
-      if (!state.isThemeManuallySet) {
+      // Só aplica se o usuário não escolheu manualmente ou se escolheu 'auto'
+      if (!state.isThemeManuallySet || state.theme === 'auto') {
         const newTheme = e.matches ? 'dark' : 'light';
         dispatch({ type: 'SET_THEME', payload: newTheme });
       }
@@ -204,7 +204,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({ children }
 
     mediaQuery.addEventListener('change', handleSystemThemeChange);
     return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
-  }, [state.isThemeManuallySet]);
+  }, [state.isThemeManuallySet, state.theme]);
 
   // Ações helper
   const setFilters = (filters: FilterState) => {
@@ -243,6 +243,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({ children }
     const newTheme = state.theme === 'light' ? 'dark' : 'light';
     setThemeManually(newTheme);
   };
+
 
   // Dados filtrados computados
   const filteredData = useMemo(() => {

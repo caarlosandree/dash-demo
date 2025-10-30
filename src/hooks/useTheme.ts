@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export type ThemeMode = 'light' | 'dark';
+export type ThemeMode = 'light' | 'dark' | 'auto';
 
 const THEME_STORAGE_KEY = 'dashboard-theme';
 
