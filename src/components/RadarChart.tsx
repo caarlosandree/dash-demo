@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { Box, Typography, Stack, Chip, Grid } from '@mui/material';
 import { RadarChart as MuiRadarChart } from '@mui/x-charts/RadarChart';
 import SpeedIcon from '@mui/icons-material/Speed';
 import SecurityIcon from '@mui/icons-material/Security';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useMemo } from 'react';
+import RadarChartModal from './RadarChartModal';
 
 interface RadarSeries {
   id: string;
@@ -24,6 +26,10 @@ interface RadarMetric {
 }
 
 const RadarChart: React.FC = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedMetric, setSelectedMetric] = useState<string>('');
+  const [selectedData, setSelectedData] = useState<any>(null);
+
   const series: RadarSeries[] = [
     {
       id: 'Performance',
@@ -55,6 +61,123 @@ const RadarChart: React.FC = () => {
     return Math.round(soma / series[0].data.length);
   }, [series]);
 
+  // Dados detalhados para cada métrica
+  const detailedData: Record<string, any> = {
+    'Velocidade': {
+      nome: 'Velocidade',
+      cor: '#6366f1',
+      valor: 85,
+      max: 100,
+      percentual: 85,
+      categoria: 'Performance',
+      descricao: 'Tempo de resposta e processamento do sistema',
+      tendencia: 'crescente' as const,
+      benchmark: 80,
+      melhoresPraticas: [
+        'Implementar cache inteligente',
+        'Otimizar consultas de banco de dados',
+        'Usar CDN para recursos estáticos',
+        'Implementar lazy loading'
+      ],
+      acoes: [
+        { acao: 'Implementar cache Redis', prioridade: 'alta' as const, prazo: '2 semanas' },
+        { acao: 'Otimizar queries SQL', prioridade: 'media' as const, prazo: '1 mês' },
+        { acao: 'Configurar CDN', prioridade: 'baixa' as const, prazo: '3 semanas' },
+      ],
+      historico: [
+        { periodo: 'Q1', valor: 75 },
+        { periodo: 'Q2', valor: 80 },
+        { periodo: 'Q3', valor: 85 },
+      ],
+      comparativo: [
+        { empresa: 'Concorrente A', valor: 78, diferenca: 7 },
+        { empresa: 'Concorrente B', valor: 82, diferenca: 3 },
+        { empresa: 'Média do Mercado', valor: 80, diferenca: 5 },
+      ],
+    },
+    'Segurança': {
+      nome: 'Segurança',
+      cor: '#10b981',
+      valor: 92,
+      max: 100,
+      percentual: 92,
+      categoria: 'Segurança',
+      descricao: 'Proteção de dados e conformidade',
+      tendencia: 'crescente' as const,
+      benchmark: 85,
+      melhoresPraticas: [
+        'Implementar autenticação de dois fatores',
+        'Criptografar dados sensíveis',
+        'Realizar auditorias regulares',
+        'Manter logs de segurança'
+      ],
+      acoes: [
+        { acao: 'Implementar 2FA', prioridade: 'alta' as const, prazo: '1 semana' },
+        { acao: 'Auditoria de segurança', prioridade: 'media' as const, prazo: '2 semanas' },
+        { acao: 'Treinamento da equipe', prioridade: 'baixa' as const, prazo: '1 mês' },
+      ],
+      historico: [
+        { periodo: 'Q1', valor: 88 },
+        { periodo: 'Q2', valor: 90 },
+        { periodo: 'Q3', valor: 92 },
+      ],
+      comparativo: [
+        { empresa: 'Concorrente A', valor: 85, diferenca: 7 },
+        { empresa: 'Concorrente B', valor: 88, diferenca: 4 },
+        { empresa: 'Média do Mercado', valor: 85, diferenca: 7 },
+      ],
+    },
+    'Usabilidade': {
+      nome: 'Usabilidade',
+      cor: '#ec4899',
+      valor: 78,
+      max: 100,
+      percentual: 78,
+      categoria: 'UX/UI',
+      descricao: 'Facilidade de uso e experiência do usuário',
+      tendencia: 'crescente' as const,
+      benchmark: 82,
+      melhoresPraticas: [
+        'Realizar testes de usabilidade',
+        'Simplificar fluxos de navegação',
+        'Melhorar feedback visual',
+        'Implementar design responsivo'
+      ],
+      acoes: [
+        { acao: 'Testes de usabilidade', prioridade: 'alta' as const, prazo: '2 semanas' },
+        { acao: 'Redesign da interface', prioridade: 'media' as const, prazo: '1 mês' },
+        { acao: 'Treinamento de usuários', prioridade: 'baixa' as const, prazo: '3 semanas' },
+      ],
+      historico: [
+        { periodo: 'Q1', valor: 70 },
+        { periodo: 'Q2', valor: 74 },
+        { periodo: 'Q3', valor: 78 },
+      ],
+      comparativo: [
+        { empresa: 'Concorrente A', valor: 82, diferenca: -4 },
+        { empresa: 'Concorrente B', valor: 80, diferenca: -2 },
+        { empresa: 'Média do Mercado', valor: 82, diferenca: -4 },
+      ],
+    },
+  };
+
+  const handleMetricClick = (event: any, itemIdentifier: any) => {
+    const metricIndex = itemIdentifier?.dataIndex ?? itemIdentifier?.itemIndex ?? itemIdentifier?.index;
+    const metricName = metrics[metricIndex];
+    
+    if (metricName && detailedData[metricName]) {
+      setSelectedMetric(metricName);
+      setSelectedData(detailedData[metricName]);
+      setOpenModal(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedMetric('');
+    setSelectedData(null);
+  };
+
   return (
     <Stack spacing={3}>
       {/* Header */}
@@ -76,7 +199,7 @@ const RadarChart: React.FC = () => {
             fontSize: '0.875rem',
           }}
         >
-          Avaliação completa das principais dimensões do produto
+          Avaliação completa das principais dimensões do produto - Clique nas métricas para detalhes
         </Typography>
       </Box>
 
@@ -97,6 +220,12 @@ const RadarChart: React.FC = () => {
           series={series}
           radar={radar}
           colors={['#818cf8']}
+          onItemClick={handleMetricClick}
+          slotProps={{
+            radar: {
+              cursor: 'pointer',
+            },
+          }}
         />
       </Box>
 
@@ -226,6 +355,21 @@ const RadarChart: React.FC = () => {
           }}
         />
       </Box>
+
+      {/* Modal de Detalhes */}
+      {selectedData && (
+        <RadarChartModal
+          open={openModal}
+          onClose={handleCloseModal}
+          selectedMetric={selectedMetric}
+          data={{
+            metrics: metrics,
+            values: series[0].data,
+            max: radar.max,
+          }}
+          metricDetails={selectedData}
+        />
+      )}
     </Stack>
   );
 };

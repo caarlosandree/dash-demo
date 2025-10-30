@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { Box, Typography, Stack, Chip, Grid } from '@mui/material';
 import { ScatterChart as MuiScatterChart } from '@mui/x-charts/ScatterChart';
 import SchoolIcon from '@mui/icons-material/School';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { useMemo } from 'react';
+import ScatterChartModal from './ScatterChartModal';
 
 interface ScatterData {
   x: number;
@@ -15,6 +17,10 @@ interface ScatterDataCollection {
 }
 
 const ScatterChart: React.FC = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedPoint, setSelectedPoint] = useState<string>('');
+  const [selectedData, setSelectedData] = useState<any>(null);
+
   // Dados simulados: tempo de estudo (x) vs nota (y)
   const data: ScatterDataCollection = {
     serie1: [
@@ -51,6 +57,117 @@ const ScatterChart: React.FC = () => {
     return variacao;
   }, [stats]);
 
+  // Dados detalhados para cada ponto
+  const detailedData: Record<number, any> = {
+    0: {
+      nome: 'Ponto 1',
+      cor: '#818cf8',
+      x: 10,
+      y: 65,
+      categoria: 'Iniciante',
+      nivel: 'Básico',
+      performance: 65,
+      tendencia: 'crescente' as const,
+      correlacao: 0.85,
+      insights: [
+        'Tempo de estudo baixo com resultado proporcional',
+        'Potencial de melhoria significativa com mais dedicação',
+        'Padrão típico de estudante iniciante'
+      ],
+      comparativo: [
+        { metrica: 'Tempo de Estudo', valor: 10, media: 40, percentil: 15 },
+        { metrica: 'Nota', valor: 65, media: 85, percentil: 20 },
+        { metrica: 'Eficiência', valor: 6.5, media: 2.1, percentil: 75 },
+      ],
+      recomendacoes: [
+        { area: 'Tempo de Estudo', acao: 'Aumentar gradualmente para 20-25h semanais', prioridade: 'alta' as const },
+        { area: 'Método de Estudo', acao: 'Implementar técnicas de estudo ativo', prioridade: 'media' as const },
+        { area: 'Avaliação', acao: 'Fazer simulados regulares para acompanhar progresso', prioridade: 'baixa' as const },
+      ],
+      historico: [
+        { periodo: 'Sem 1', x: 8, y: 60 },
+        { periodo: 'Sem 2', x: 9, y: 62 },
+        { periodo: 'Sem 3', x: 10, y: 65 },
+      ],
+    },
+    6: {
+      nome: 'Ponto 7',
+      cor: '#34d399',
+      x: 40,
+      y: 88,
+      categoria: 'Intermediário',
+      nivel: 'Avançado',
+      performance: 88,
+      tendencia: 'crescente' as const,
+      correlacao: 0.92,
+      insights: [
+        'Excelente relação tempo-resultado',
+        'Demonstra consistência nos estudos',
+        'Próximo ao ponto ótimo de eficiência'
+      ],
+      comparativo: [
+        { metrica: 'Tempo de Estudo', valor: 40, media: 40, percentil: 50 },
+        { metrica: 'Nota', valor: 88, media: 85, percentil: 70 },
+        { metrica: 'Eficiência', valor: 2.2, media: 2.1, percentil: 60 },
+      ],
+      recomendacoes: [
+        { area: 'Manutenção', acao: 'Manter o ritmo atual de estudos', prioridade: 'baixa' as const },
+        { area: 'Refinamento', acao: 'Focar em áreas específicas de dificuldade', prioridade: 'media' as const },
+      ],
+      historico: [
+        { periodo: 'Sem 1', x: 35, y: 82 },
+        { periodo: 'Sem 2', x: 38, y: 85 },
+        { periodo: 'Sem 3', x: 40, y: 88 },
+      ],
+    },
+    12: {
+      nome: 'Ponto 13',
+      cor: '#f59e0b',
+      x: 70,
+      y: 97,
+      categoria: 'Avançado',
+      nivel: 'Expert',
+      performance: 97,
+      tendencia: 'estavel' as const,
+      correlacao: 0.95,
+      insights: [
+        'Máximo desempenho alcançado',
+        'Possível saturação do tempo de estudo',
+        'Foco deve ser em manutenção e otimização'
+      ],
+      comparativo: [
+        { metrica: 'Tempo de Estudo', valor: 70, media: 40, percentil: 95 },
+        { metrica: 'Nota', valor: 97, media: 85, percentil: 98 },
+        { metrica: 'Eficiência', valor: 1.4, media: 2.1, percentil: 30 },
+      ],
+      recomendacoes: [
+        { area: 'Otimização', acao: 'Reduzir tempo e focar em qualidade', prioridade: 'alta' as const },
+        { area: 'Mentoria', acao: 'Ajudar outros estudantes', prioridade: 'media' as const },
+      ],
+      historico: [
+        { periodo: 'Sem 1', x: 65, y: 95 },
+        { periodo: 'Sem 2', x: 68, y: 96 },
+        { periodo: 'Sem 3', x: 70, y: 97 },
+      ],
+    },
+  };
+
+  const handlePointClick = (event: any, itemIdentifier: any) => {
+    const pointId = itemIdentifier?.dataIndex ?? itemIdentifier?.itemIndex ?? itemIdentifier?.index;
+    
+    if (detailedData[pointId]) {
+      setSelectedPoint(`Ponto ${pointId + 1}`);
+      setSelectedData(detailedData[pointId]);
+      setOpenModal(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedPoint('');
+    setSelectedData(null);
+  };
+
   return (
     <Stack spacing={2} sx={{ height: '100%' }}>
       {/* Header */}
@@ -72,7 +189,7 @@ const ScatterChart: React.FC = () => {
             fontSize: '0.875rem',
           }}
         >
-          Análise de correlação entre horas estudadas e notas alcançadas
+          Análise de correlação entre horas estudadas e notas alcançadas - Clique nos pontos para detalhes
         </Typography>
       </Box>
 
@@ -188,6 +305,12 @@ const ScatterChart: React.FC = () => {
             },
           ]}
           margin={{ top: 20, bottom: 40, left: 60, right: 30 }}
+          onItemClick={handlePointClick}
+          slotProps={{
+            scatter: {
+              cursor: 'pointer',
+            },
+          }}
         />
       </Box>
 
@@ -238,6 +361,21 @@ const ScatterChart: React.FC = () => {
           }}
         />
       </Box>
+
+      {/* Modal de Detalhes */}
+      {selectedData && (
+        <ScatterChartModal
+          open={openModal}
+          onClose={handleCloseModal}
+          selectedPoint={selectedPoint}
+          data={{
+            x: data.serie1.map(p => p.x),
+            y: data.serie1.map(p => p.y),
+            labels: data.serie1.map((_, i) => `Ponto ${i + 1}`),
+          }}
+          pointDetails={selectedData}
+        />
+      )}
     </Stack>
   );
 };

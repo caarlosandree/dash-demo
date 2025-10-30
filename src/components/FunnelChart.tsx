@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { Box, Typography, Stack, Chip, Grid } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { useMemo } from 'react';
+import FunnelChartModal from './FunnelChartModal';
 
 interface FunnelData {
   id: number;
@@ -13,6 +15,10 @@ interface FunnelData {
 }
 
 const FunnelChart: React.FC = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedStage, setSelectedStage] = useState<string>('');
+  const [selectedData, setSelectedData] = useState<any>(null);
+
   const data: FunnelData[] = [
     { id: 0, etapa: 'Visitantes', valor: 10000, percentual: 100, color: '#6366f1', icon: '👥' },
     { id: 1, etapa: 'Cadastros', valor: 6500, percentual: 65, color: '#818cf8', icon: '📝' },
@@ -45,6 +51,141 @@ const FunnelChart: React.FC = () => {
     return { etapa, queda: maiorQueda.toFixed(1) };
   }, [data]);
 
+  // Dados detalhados para cada etapa
+  const detailedData: Record<string, any> = {
+    'Visitantes': {
+      nome: 'Visitantes',
+      cor: '#6366f1',
+      valor: 10000,
+      percentual: 100,
+      posicao: 1,
+      total: 10000,
+      conversao: 100,
+      perda: 0,
+      categoria: 'Aquisição',
+      descricao: 'Total de visitantes únicos no site',
+      tendencia: 'crescente' as const,
+      benchmark: 12000,
+      fatores: [
+        { fator: 'Tráfego Orgânico', impacto: 'alto' as const, descricao: 'SEO e conteúdo de qualidade' },
+        { fator: 'Tráfego Pago', impacto: 'medio' as const, descricao: 'Campanhas de anúncios' },
+        { fator: 'Tráfego Social', impacto: 'baixo' as const, descricao: 'Redes sociais e influenciadores' },
+      ],
+      acoes: [
+        { acao: 'Otimizar SEO', prioridade: 'alta' as const, prazo: '2 semanas', impacto: 20 },
+        { acao: 'Melhorar UX', prioridade: 'media' as const, prazo: '1 mês', impacto: 15 },
+        { acao: 'Campanhas PPC', prioridade: 'baixa' as const, prazo: '3 semanas', impacto: 10 },
+      ],
+      historico: [
+        { periodo: 'Q1', valor: 8500, conversao: 100 },
+        { periodo: 'Q2', valor: 9200, conversao: 100 },
+        { periodo: 'Q3', valor: 10000, conversao: 100 },
+      ],
+      comparativo: [
+        { empresa: 'Concorrente A', valor: 12000, diferenca: -2000 },
+        { empresa: 'Concorrente B', valor: 15000, diferenca: -5000 },
+        { empresa: 'Média do Mercado', valor: 11000, diferenca: -1000 },
+      ],
+      insights: [
+        'Crescimento consistente de 8% ao trimestre',
+        'Potencial de crescimento com investimento em SEO',
+        'Taxa de conversão para próxima etapa em 65%'
+      ],
+    },
+    'Cadastros': {
+      nome: 'Cadastros',
+      cor: '#818cf8',
+      valor: 6500,
+      percentual: 65,
+      posicao: 2,
+      total: 10000,
+      conversao: 65,
+      perda: 35,
+      categoria: 'Conversão',
+      descricao: 'Usuários que se cadastraram no sistema',
+      tendencia: 'crescente' as const,
+      benchmark: 70,
+      fatores: [
+        { fator: 'Formulário Simples', impacto: 'alto' as const, descricao: 'Reduzir campos obrigatórios' },
+        { fator: 'Benefícios Claros', impacto: 'alto' as const, descricao: 'Comunicar valor do cadastro' },
+        { fator: 'Confiança', impacto: 'medio' as const, descricao: 'Testimonials e segurança' },
+      ],
+      acoes: [
+        { acao: 'Simplificar formulário', prioridade: 'alta' as const, prazo: '1 semana', impacto: 25 },
+        { acao: 'A/B test de landing page', prioridade: 'media' as const, prazo: '2 semanas', impacto: 15 },
+        { acao: 'Adicionar social login', prioridade: 'baixa' as const, prazo: '3 semanas', impacto: 10 },
+      ],
+      historico: [
+        { periodo: 'Q1', valor: 5500, conversao: 65 },
+        { periodo: 'Q2', valor: 6000, conversao: 65 },
+        { periodo: 'Q3', valor: 6500, conversao: 65 },
+      ],
+      comparativo: [
+        { empresa: 'Concorrente A', valor: 7000, diferenca: -500 },
+        { empresa: 'Concorrente B', valor: 8000, diferenca: -1500 },
+        { empresa: 'Média do Mercado', valor: 7000, diferenca: -500 },
+      ],
+      insights: [
+        'Taxa de conversão estável em 65%',
+        'Maior perda no funil: 35% dos visitantes',
+        'Oportunidade de melhoria com UX'
+      ],
+    },
+    'Compras': {
+      nome: 'Compras',
+      cor: '#ec4899',
+      valor: 2800,
+      percentual: 28,
+      posicao: 4,
+      total: 10000,
+      conversao: 28,
+      perda: 72,
+      categoria: 'Vendas',
+      descricao: 'Clientes que realizaram compras',
+      tendencia: 'crescente' as const,
+      benchmark: 35,
+      fatores: [
+        { fator: 'Preço Competitivo', impacto: 'alto' as const, descricao: 'Análise de preços do mercado' },
+        { fator: 'Processo de Checkout', impacto: 'alto' as const, descricao: 'Simplificar compra' },
+        { fator: 'Confiança na Marca', impacto: 'medio' as const, descricao: 'Garantias e reviews' },
+      ],
+      acoes: [
+        { acao: 'Otimizar checkout', prioridade: 'alta' as const, prazo: '1 semana', impacto: 30 },
+        { acao: 'Implementar garantia', prioridade: 'media' as const, prazo: '2 semanas', impacto: 20 },
+        { acao: 'Programa de fidelidade', prioridade: 'baixa' as const, prazo: '1 mês', impacto: 15 },
+      ],
+      historico: [
+        { periodo: 'Q1', valor: 2200, conversao: 26 },
+        { periodo: 'Q2', valor: 2500, conversao: 27 },
+        { periodo: 'Q3', valor: 2800, conversao: 28 },
+      ],
+      comparativo: [
+        { empresa: 'Concorrente A', valor: 3500, diferenca: -700 },
+        { empresa: 'Concorrente B', valor: 4000, diferenca: -1200 },
+        { empresa: 'Média do Mercado', valor: 3000, diferenca: -200 },
+      ],
+      insights: [
+        'Taxa de conversão abaixo do benchmark',
+        'Crescimento de 9% no último trimestre',
+        'Foco necessário em otimização de checkout'
+      ],
+    },
+  };
+
+  const handleStageClick = (etapa: string) => {
+    if (detailedData[etapa]) {
+      setSelectedStage(etapa);
+      setSelectedData(detailedData[etapa]);
+      setOpenModal(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedStage('');
+    setSelectedData(null);
+  };
+
   return (
     <Stack spacing={2} sx={{ height: '100%' }}>
       {/* Header */}
@@ -66,7 +207,7 @@ const FunnelChart: React.FC = () => {
             fontSize: '0.875rem',
           }}
         >
-          Análise do comportamento dos usuários através do funil de vendas
+          Análise do comportamento dos usuários através do funil de vendas - Clique nas etapas para detalhes
         </Typography>
       </Box>
 
@@ -160,6 +301,7 @@ const FunnelChart: React.FC = () => {
                   position: 'relative',
                   overflow: 'hidden',
                   transition: 'all 0.3s ease',
+                  cursor: 'pointer',
                   '&:hover': {
                     transform: 'scale(1.02)',
                     boxShadow: `0 4px 12px ${item.color}40`,
@@ -168,6 +310,7 @@ const FunnelChart: React.FC = () => {
                 style={{
                   width: `${item.percentual}%`,
                 }}
+                onClick={() => handleStageClick(item.etapa)}
               />
               {index < data.length - 1 && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', my: 0.5 }}>
@@ -241,6 +384,21 @@ const FunnelChart: React.FC = () => {
           </Typography>
         </Box>
       </Box>
+
+      {/* Modal de Detalhes */}
+      {selectedData && (
+        <FunnelChartModal
+          open={openModal}
+          onClose={handleCloseModal}
+          selectedStage={selectedStage}
+          data={{
+            etapas: data.map(item => item.etapa),
+            valores: data.map(item => item.valor),
+            percentuais: data.map(item => item.percentual),
+          }}
+          stageDetails={selectedData}
+        />
+      )}
     </Stack>
   );
 };

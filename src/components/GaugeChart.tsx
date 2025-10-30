@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { Box, Typography, Stack, Chip } from '@mui/material';
 import { GaugeContainer, GaugeValueArc, GaugeReferenceArc } from '@mui/x-charts/Gauge';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { useMemo } from 'react';
+import GaugeChartModal from './GaugeChartModal';
 
 interface GaugeMetrics {
   value: number;
@@ -13,6 +15,10 @@ interface GaugeMetrics {
 }
 
 const GaugeChart: React.FC = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedMetric, setSelectedMetric] = useState<string>('');
+  const [selectedData, setSelectedData] = useState<any>(null);
+
   const metrics: GaugeMetrics = {
     value: 75,
     meta: 85,
@@ -58,6 +64,58 @@ const GaugeChart: React.FC = () => {
   // Calcula porcentagem até a meta
   const progressoMeta = ((metrics.value / metrics.meta) * 100).toFixed(1);
 
+  // Dados detalhados para o gauge
+  const detailedData = {
+    nome: 'Performance Geral',
+    cor: gaugeConfig.color,
+    valor: metrics.value,
+    meta: metrics.meta,
+    max: 100,
+    percentual: parseFloat(progressoMeta),
+    status: gaugeConfig.status,
+    categoria: 'Performance',
+    descricao: 'Eficiência operacional do sistema',
+    tendencia: metrics.variacao >= 0 ? 'crescente' as const : 'decrescente' as const,
+    benchmark: 80,
+    kpis: [
+      { nome: 'Uptime', valor: 99.5, meta: 99.9, status: 'ok' as const },
+      { nome: 'Tempo de Resposta', valor: 120, meta: 100, status: 'atencao' as const },
+      { nome: 'Throughput', valor: 850, meta: 1000, status: 'atencao' as const },
+      { nome: 'Disponibilidade', valor: 98.2, meta: 99.0, status: 'ok' as const },
+    ],
+    acoes: [
+      { acao: 'Otimizar consultas de banco', prioridade: 'alta' as const, prazo: '1 semana', impacto: 15 },
+      { acao: 'Implementar cache Redis', prioridade: 'media' as const, prazo: '2 semanas', impacto: 10 },
+      { acao: 'Configurar monitoramento', prioridade: 'baixa' as const, prazo: '1 mês', impacto: 5 },
+    ],
+    historico: [
+      { periodo: 'Q1', valor: 65, meta: 85 },
+      { periodo: 'Q2', valor: 70, meta: 85 },
+      { periodo: 'Q3', valor: 75, meta: 85 },
+    ],
+    comparativo: [
+      { empresa: 'Concorrente A', valor: 78, diferenca: -3 },
+      { empresa: 'Concorrente B', valor: 82, diferenca: -7 },
+      { empresa: 'Média do Mercado', valor: 80, diferenca: -5 },
+    ],
+    alertas: [
+      { tipo: 'warning' as const, mensagem: 'Performance abaixo da meta estabelecida' },
+      { tipo: 'info' as const, mensagem: 'Tendência de crescimento positiva identificada' },
+    ],
+  };
+
+  const handleGaugeClick = () => {
+    setSelectedMetric(metrics.label);
+    setSelectedData(detailedData);
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setSelectedMetric('');
+    setSelectedData(null);
+  };
+
   return (
     <Stack spacing={2} sx={{ height: '100%' }}>
       {/* Header com título e descrição */}
@@ -79,7 +137,7 @@ const GaugeChart: React.FC = () => {
             fontSize: '0.875rem',
           }}
         >
-          {metrics.descricao}
+          {metrics.descricao} - Clique no gauge para detalhes
         </Typography>
       </Box>
 
@@ -95,12 +153,20 @@ const GaugeChart: React.FC = () => {
         }}
       >
         {/* Gauge principal */}
-        <Box sx={{ 
-          position: 'relative',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+        <Box 
+          sx={{ 
+            position: 'relative',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            cursor: 'pointer',
+            '&:hover': {
+              transform: 'scale(1.05)',
+              transition: 'transform 0.2s ease',
+            },
+          }}
+          onClick={handleGaugeClick}
+        >
           <GaugeContainer
             width={200}
             height={200}
@@ -285,6 +351,21 @@ const GaugeChart: React.FC = () => {
           </Box>
         </Box>
       </Stack>
+
+      {/* Modal de Detalhes */}
+      {selectedData && (
+        <GaugeChartModal
+          open={openModal}
+          onClose={handleCloseModal}
+          selectedMetric={selectedMetric}
+          data={{
+            value: metrics.value,
+            meta: metrics.meta,
+            max: 100,
+          }}
+          metricDetails={selectedData}
+        />
+      )}
     </Stack>
   );
 };
