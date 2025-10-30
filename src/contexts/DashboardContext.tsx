@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, ReactNode, useMemo } from 'react';
+import { createContext, useContext, useReducer, ReactNode, useMemo, useEffect } from 'react';
 import { FilterState } from '../components/FilterPanel';
 import { ThemeMode } from '../hooks/useTheme';
 
@@ -8,6 +8,7 @@ interface DashboardState {
   isLoading: boolean;
   currentTab: number;
   theme: ThemeMode;
+  isThemeManuallySet: boolean; // Rastreia se o usuário escolheu manualmente
   data: {
     lineData: {
       vendas: number[];
@@ -36,22 +37,24 @@ type DashboardAction =
   | { type: 'UPDATE_DATA'; payload: Partial<DashboardState['data']> }
   | { type: 'RESET_FILTERS' }
   | { type: 'CLEAR_LOADING' }
-  | { type: 'SET_THEME'; payload: ThemeMode };
+  | { type: 'SET_THEME'; payload: ThemeMode }
+  | { type: 'SET_THEME_MANUALLY'; payload: ThemeMode };
 
 // Função helper para obter tema inicial
-const getInitialTheme = (): ThemeMode => {
-  if (typeof window === 'undefined') return 'light';
+const getInitialTheme = (): { theme: ThemeMode; isManuallySet: boolean } => {
+  if (typeof window === 'undefined') return { theme: 'light', isManuallySet: false };
   
   const savedTheme = localStorage.getItem('dashboard-theme');
   if (savedTheme === 'light' || savedTheme === 'dark') {
-    return savedTheme;
+    return { theme: savedTheme, isManuallySet: true };
   }
   
   const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  return prefersDark ? 'dark' : 'light';
+  return { theme: prefersDark ? 'dark' : 'light', isManuallySet: false };
 };
 
 // Estado inicial
+const initialThemeData = getInitialTheme();
 const initialState: DashboardState = {
   filters: {
     period: { type: 'last30days' },
@@ -65,7 +68,8 @@ const initialState: DashboardState = {
   },
   isLoading: true,
   currentTab: 0,
-  theme: getInitialTheme(),
+  theme: initialThemeData.theme,
+  isThemeManuallySet: initialThemeData.isManuallySet,
   data: {
     lineData: {
       vendas: [120, 145, 138, 162, 178, 195, 210],
@@ -138,6 +142,13 @@ function dashboardReducer(state: DashboardState, action: DashboardAction): Dashb
         theme: action.payload,
       };
     
+    case 'SET_THEME_MANUALLY':
+      return {
+        ...state,
+        theme: action.payload,
+        isThemeManuallySet: true,
+      };
+    
     default:
       return state;
   }
@@ -154,6 +165,7 @@ interface DashboardContextType {
   resetFilters: () => void;
   clearLoading: () => void;
   setTheme: (theme: ThemeMode) => void;
+  setThemeManually: (theme: ThemeMode) => void;
   toggleTheme: () => void;
   // Dados computados
   filteredData: DashboardState['data'];
@@ -175,6 +187,24 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({ children }
       document.documentElement.setAttribute('data-theme', state.theme);
     }
   }, [state.theme]);
+
+  // Listener para mudanças do tema do sistema
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleSystemThemeChange = (e: MediaQueryListEvent) => {
+      // Só aplica se o usuário não escolheu manualmente
+      if (!state.isThemeManuallySet) {
+        const newTheme = e.matches ? 'dark' : 'light';
+        dispatch({ type: 'SET_THEME', payload: newTheme });
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleSystemThemeChange);
+    return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
+  }, [state.isThemeManuallySet]);
 
   // Ações helper
   const setFilters = (filters: FilterState) => {
@@ -203,9 +233,15 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({ children }
     document.documentElement.setAttribute('data-theme', theme);
   };
 
+  const setThemeManually = (theme: ThemeMode) => {
+    dispatch({ type: 'SET_THEME_MANUALLY', payload: theme });
+    localStorage.setItem('dashboard-theme', theme);
+    document.documentElement.setAttribute('data-theme', theme);
+  };
+
   const toggleTheme = () => {
     const newTheme = state.theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
+    setThemeManually(newTheme);
   };
 
   // Dados filtrados computados
@@ -260,6 +296,7 @@ export const DashboardProvider: React.FC<DashboardProviderProps> = ({ children }
     resetFilters,
     clearLoading,
     setTheme,
+    setThemeManually,
     toggleTheme,
     filteredData,
   };
