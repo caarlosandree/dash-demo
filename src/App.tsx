@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { 
   Container, 
@@ -28,6 +28,7 @@ import GaugeChart from './components/GaugeChart';
 import FunnelChart from './components/FunnelChart';
 import RadarChart from './components/RadarChart';
 import ClinicStats from './components/ClinicStats';
+import FilterPanel, { FilterState } from './components/FilterPanel';
 
 const fadeInUp = keyframes`
   from {
@@ -239,10 +240,92 @@ const ChartCard: React.FC<{
 
 const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState(0);
+  const [filters, setFilters] = useState<FilterState>({
+    period: { type: 'last30days' },
+    categories: ['Vendas', 'Receita', 'Produtos'],
+    dataTypes: ['Números', 'Percentuais'],
+    chartTypes: ['Linha', 'Barras', 'Pizza', 'Área'],
+    valueRange: [0, 1000000],
+    showTrends: true,
+    showProjections: false,
+    aggregation: 'monthly',
+  });
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue);
   };
+
+  const handleFiltersChange = (newFilters: FilterState) => {
+    setFilters(newFilters);
+  };
+
+  // Função para gerar dados baseados nos filtros
+  const generateFilteredData = useMemo(() => {
+    const baseData = {
+      // Dados para LineChart
+      lineData: {
+        vendas: [120, 145, 138, 162, 178, 195, 210],
+        receita: [80, 95, 110, 125, 140, 155, 170],
+        meses: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'],
+      },
+      // Dados para BarChart
+      barData: [
+        { categoria: 'Q1', produtoA: 4000, produtoB: 2400, produtoC: 2000 },
+        { categoria: 'Q2', produtoA: 3000, produtoB: 1398, produtoC: 2210 },
+        { categoria: 'Q3', produtoA: 2000, produtoB: 9800, produtoC: 2290 },
+        { categoria: 'Q4', produtoA: 2780, produtoB: 3908, produtoC: 2000 },
+      ],
+      // Dados para PieChart
+      pieData: [
+        { id: 0, value: 45, label: 'Desktop' },
+        { id: 1, value: 30, label: 'Mobile' },
+        { id: 2, value: 15, label: 'Tablet' },
+        { id: 3, value: 7, label: 'Smart TV' },
+        { id: 4, value: 3, label: 'Outros' },
+      ],
+    };
+
+    // Aplicar filtros de período
+    let filteredData = { ...baseData };
+    
+    if (filters.period.type === 'last7days') {
+      // Simular dados dos últimos 7 dias
+      filteredData.lineData = {
+        vendas: [180, 195, 210, 225, 240, 255, 270],
+        receita: [120, 135, 150, 165, 180, 195, 210],
+        meses: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+      };
+    } else if (filters.period.type === 'last90days') {
+      // Simular dados dos últimos 90 dias
+      filteredData.lineData = {
+        vendas: [100, 110, 120, 130, 140, 150, 160],
+        receita: [70, 80, 90, 100, 110, 120, 130],
+        meses: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7'],
+      };
+    }
+
+    // Aplicar filtros de faixa de valores
+    const valueMultiplier = filters.valueRange[1] / 1000000;
+    filteredData.lineData.vendas = filteredData.lineData.vendas.map(v => Math.round(v * valueMultiplier));
+    filteredData.lineData.receita = filteredData.lineData.receita.map(v => Math.round(v * valueMultiplier));
+    
+    filteredData.barData = filteredData.barData.map(item => ({
+      ...item,
+      produtoA: Math.round(item.produtoA * valueMultiplier),
+      produtoB: Math.round(item.produtoB * valueMultiplier),
+      produtoC: Math.round(item.produtoC * valueMultiplier),
+    }));
+
+    // Aplicar filtros de categorias
+    if (!filters.categories.includes('Vendas')) {
+      filteredData.lineData.vendas = [];
+    }
+    if (!filters.categories.includes('Receita')) {
+      filteredData.lineData.receita = [];
+    }
+
+    return filteredData;
+  }, [filters]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -370,6 +453,12 @@ const App: React.FC = () => {
           {/* Conteúdo das Abas */}
           {currentTab === 0 && (
             <>
+              {/* Painel de Filtros */}
+              <FilterPanel 
+                onFiltersChange={handleFiltersChange}
+                initialFilters={filters}
+              />
+
               {/* Seção: Análises Temporais */}
           <SectionHeader
             icon={<TimelineIcon />}
@@ -379,7 +468,7 @@ const App: React.FC = () => {
           />
           <Grid container spacing={3}>
             <ChartCard delay={0.3}>
-              <LineChart />
+              <LineChart data={generateFilteredData.lineData} />
             </ChartCard>
 
             <ChartCard delay={0.4}>
@@ -396,11 +485,11 @@ const App: React.FC = () => {
           />
           <Grid container spacing={3}>
             <ChartCard delay={0.6}>
-              <BarChart />
+              <BarChart data={generateFilteredData.barData} />
             </ChartCard>
 
             <ChartCard delay={0.7}>
-              <PieChart />
+              <PieChart data={generateFilteredData.pieData} />
             </ChartCard>
 
             <ChartCard delay={0.8}>

@@ -18,18 +18,24 @@ interface DetailData {
   crescimento: number;
 }
 
-const PieChart: React.FC = () => {
+interface PieChartProps {
+  data?: PieData[];
+}
+
+const PieChart: React.FC<PieChartProps> = ({ data: propData }) => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedData, setSelectedData] = useState<DetailData | null>(null);
 
-  const data: PieData[] = [
+  const defaultData: PieData[] = [
     { id: 0, value: 35, label: 'Desktop' },
     { id: 1, value: 25, label: 'Mobile' },
     { id: 2, value: 20, label: 'Tablet' },
     { id: 3, value: 15, label: 'Smart TV' },
     { id: 4, value: 5, label: 'Outros' },
   ];
+
+  const data: PieData[] = propData || defaultData;
 
   // Dados mockados detalhados para cada categoria
   const detailedData: Record<string, DetailData> = {

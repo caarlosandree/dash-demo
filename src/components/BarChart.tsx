@@ -12,17 +12,23 @@ interface BarData {
   [key: string]: string | number;
 }
 
-const BarChart: React.FC = () => {
+interface BarChartProps {
+  data?: BarData[];
+}
+
+const BarChart: React.FC<BarChartProps> = ({ data: propData }) => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string>('');
   const [selectedData, setSelectedData] = useState<any>(null);
 
-  const data: BarData[] = [
+  const defaultData: BarData[] = [
     { categoria: 'Q1', produtoA: 4000, produtoB: 2400, produtoC: 2000 },
     { categoria: 'Q2', produtoA: 3000, produtoB: 1398, produtoC: 2210 },
     { categoria: 'Q3', produtoA: 2000, produtoB: 9800, produtoC: 2290 },
     { categoria: 'Q4', produtoA: 2780, produtoB: 3908, produtoC: 2000 },
   ];
+
+  const data: BarData[] = propData || defaultData;
 
   const produtos = [
     { name: 'Produto A', color: '#818cf8', key: 'produtoA' as const },

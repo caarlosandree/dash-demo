@@ -11,25 +11,46 @@ interface SeriesData {
   data: number[];
 }
 
-const LineChart: React.FC = () => {
+interface LineChartProps {
+  data?: {
+    vendas: number[];
+    receita: number[];
+    meses: string[];
+  };
+}
+
+const LineChart: React.FC<LineChartProps> = ({ data: propData }) => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState<string>('');
   const [selectedData, setSelectedData] = useState<any>(null);
 
+  // Usar dados filtrados ou dados padrão
+  const defaultData = {
+    vendas: [120, 145, 138, 162, 178, 195, 210],
+    receita: [80, 95, 110, 125, 140, 155, 170],
+    meses: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'],
+  };
+
+  const chartData = propData || defaultData;
+
   const data: SeriesData[] = [
-    { id: 'vendas', label: 'Vendas', data: [120, 145, 138, 162, 178, 195, 210] },
-    { id: 'receita', label: 'Receita', data: [80, 95, 110, 125, 140, 155, 170] },
-  ];
+    { id: 'vendas', label: 'Vendas', data: chartData.vendas },
+    { id: 'receita', label: 'Receita', data: chartData.receita },
+  ].filter(series => series.data.length > 0); // Filtrar séries vazias
 
   const xAxis = [
     {
-      data: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'],
+      data: chartData.meses,
       scaleType: 'point' as const,
     },
   ];
 
-  const vendasVariacao = ((210 - 120) / 120 * 100).toFixed(1);
-  const receitaVariacao = ((170 - 80) / 80 * 100).toFixed(1);
+  const vendasVariacao = chartData.vendas.length > 1 
+    ? ((chartData.vendas[chartData.vendas.length - 1] - chartData.vendas[0]) / chartData.vendas[0] * 100).toFixed(1)
+    : '0.0';
+  const receitaVariacao = chartData.receita.length > 1 
+    ? ((chartData.receita[chartData.receita.length - 1] - chartData.receita[0]) / chartData.receita[0] * 100).toFixed(1)
+    : '0.0';
 
   // Dados detalhados para cada métrica
   const detailedData: Record<string, any> = {
