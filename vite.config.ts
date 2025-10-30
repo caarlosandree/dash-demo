@@ -8,44 +8,46 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
+        manualChunks: (id) => {
           // Vendor chunks
-          'react-vendor': ['react', 'react-dom'],
-          'mui-vendor': ['@mui/material', '@mui/icons-material', '@emotion/react', '@emotion/styled'],
-          'charts-vendor': ['@mui/x-charts', '@mui/x-date-pickers'],
-          'date-vendor': ['date-fns'],
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom')) {
+              return 'react-vendor';
+            }
+            if (id.includes('@mui/material') || id.includes('@mui/icons-material') || 
+                id.includes('@emotion/react') || id.includes('@emotion/styled')) {
+              return 'mui-vendor';
+            }
+            if (id.includes('@mui/x-charts') || id.includes('@mui/x-date-pickers')) {
+              return 'charts-vendor';
+            }
+            if (id.includes('date-fns')) {
+              return 'date-vendor';
+            }
+            return 'vendor';
+          }
           
           // Chart chunks
-          'line-chart': ['./src/components/LineChart'],
-          'bar-chart': ['./src/components/BarChart'],
-          'pie-chart': ['./src/components/PieChart'],
-          'area-chart': ['./src/components/AreaChart'],
-          'scatter-chart': ['./src/components/ScatterChart'],
-          'sparkline-chart': ['./src/components/SparklineChart'],
-          'gauge-chart': ['./src/components/GaugeChart'],
-          'funnel-chart': ['./src/components/FunnelChart'],
-          'radar-chart': ['./src/components/RadarChart'],
+          if (id.includes('/src/components/LineChart')) return 'line-chart';
+          if (id.includes('/src/components/BarChart')) return 'bar-chart';
+          if (id.includes('/src/components/PieChart')) return 'pie-chart';
+          if (id.includes('/src/components/AreaChart')) return 'area-chart';
+          if (id.includes('/src/components/ScatterChart')) return 'scatter-chart';
+          if (id.includes('/src/components/SparklineChart')) return 'sparkline-chart';
+          if (id.includes('/src/components/GaugeChart')) return 'gauge-chart';
+          if (id.includes('/src/components/FunnelChart')) return 'funnel-chart';
+          if (id.includes('/src/components/RadarChart')) return 'radar-chart';
           
           // Modal chunks
-          'chart-modals': [
-            './src/components/LineChartModal',
-            './src/components/BarChartModal',
-            './src/components/PieChartModal',
-            './src/components/AreaChartModal',
-            './src/components/ScatterChartModal',
-            './src/components/SparklineChartModal',
-            './src/components/GaugeChartModal',
-            './src/components/FunnelChartModal',
-            './src/components/RadarChartModal',
-          ],
+          if (id.includes('ChartModal')) return 'chart-modals';
           
           // Stats chunks
-          'clinic-stats': ['./src/components/ClinicStats'],
-          'clinic-modals': [
-            './src/components/AgendamentosTable',
-            './src/components/PresencasModal',
-            './src/components/ProfissionalModal',
-          ],
+          if (id.includes('/src/components/ClinicStats')) return 'clinic-stats';
+          if (id.includes('/src/components/AgendamentosTable') || 
+              id.includes('/src/components/PresencasModal') || 
+              id.includes('/src/components/ProfissionalModal')) {
+            return 'clinic-modals';
+          }
         },
       },
     },
