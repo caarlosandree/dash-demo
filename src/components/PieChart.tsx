@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Box } from '@mui/material';
+import { useState, useMemo } from 'react';
+import { Box, Typography, Stack, Chip, Grid } from '@mui/material';
 import { PieChart as MuiPieChart } from '@mui/x-charts/PieChart';
 import PieChartModal from './PieChartModal';
 
@@ -123,42 +123,157 @@ const PieChart: React.FC = () => {
     setSelectedData(null);
   };
 
+  const total = useMemo(() => {
+    return data.reduce((acc, item) => acc + item.value, 0);
+  }, [data]);
+
+  const maiorCategoria = useMemo(() => {
+    return data.reduce((max, item) => item.value > max.value ? item : max);
+  }, [data]);
+
+  const cores = ['#818cf8', '#f472b6', '#34d399', '#fbbf24', '#60a5fa'];
+
   return (
     <>
-      <Box sx={{ 
-        width: '100%', 
-        height: 300, 
-        display: 'flex', 
-        justifyContent: 'center',
-        bgcolor: '#f8fafc',
-        borderRadius: 2,
-        p: 2,
-        border: '1px solid rgba(0, 0, 0, 0.05)',
-      }}>
-        <MuiPieChart
-          series={[
-            {
-              data,
-              innerRadius: 30,
-              outerRadius: 100,
-              paddingAngle: 2,
-              cornerRadius: 5,
-              startAngle: -90,
-              endAngle: 270,
-              highlightScope: { fade: 'global', highlight: 'item' },
-            },
-          ]}
-          colors={['#818cf8', '#f472b6', '#34d399', '#fbbf24', '#60a5fa']}
-          width={400}
-          height={300}
-          onItemClick={handleItemClick}
-          slotProps={{
-            pieArc: {
-              cursor: 'pointer',
-            },
+      <Stack spacing={2} sx={{ height: '100%' }}>
+        {/* Header */}
+        <Box>
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              fontWeight: 700, 
+              color: '#1e293b',
+              mb: 0.5,
+            }}
+          >
+            Distribuição de Dispositivos
+          </Typography>
+          <Typography 
+            variant="body2" 
+            sx={{ 
+              color: '#64748b',
+              fontSize: '0.875rem',
+            }}
+          >
+            Clique em uma fatia para ver detalhes
+          </Typography>
+        </Box>
+
+        {/* Resumo */}
+        <Box
+          sx={{
+            p: 2,
+            bgcolor: `${cores[0]}15`,
+            borderRadius: 2,
+            border: `1px solid ${cores[0]}30`,
           }}
-        />
-      </Box>
+        >
+          <Typography variant="caption" sx={{ color: '#64748b', fontSize: '0.7rem', display: 'block' }}>
+            Total de Dispositivos
+          </Typography>
+          <Stack direction="row" spacing={2} alignItems="baseline" sx={{ mt: 0.5 }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, color: '#1e293b' }}>
+              {total.toLocaleString('pt-BR')}
+            </Typography>
+            <Chip
+              label={maiorCategoria.label}
+              size="small"
+              sx={{
+                bgcolor: `${cores[data.indexOf(maiorCategoria)]}20`,
+                color: cores[data.indexOf(maiorCategoria)],
+                fontWeight: 600,
+                fontSize: '0.7rem',
+                border: `1px solid ${cores[data.indexOf(maiorCategoria)]}40`,
+              }}
+            />
+          </Stack>
+        </Box>
+
+        {/* Gráfico */}
+        <Box sx={{ 
+          width: '100%', 
+          height: 300, 
+          display: 'flex', 
+          justifyContent: 'center',
+          bgcolor: '#f8fafc',
+          borderRadius: 2,
+          p: 2,
+          border: '1px solid rgba(0, 0, 0, 0.05)',
+        }}>
+          <MuiPieChart
+            series={[
+              {
+                data,
+                innerRadius: 30,
+                outerRadius: 100,
+                paddingAngle: 2,
+                cornerRadius: 5,
+                startAngle: -90,
+                endAngle: 270,
+                highlightScope: { fade: 'global', highlight: 'item' },
+              },
+            ]}
+            colors={cores}
+            width={400}
+            height={300}
+            onItemClick={handleItemClick}
+            slotProps={{
+              pieArc: {
+                cursor: 'pointer',
+              },
+            }}
+          />
+        </Box>
+
+        {/* Legenda */}
+        <Grid container spacing={1}>
+          {data.map((item, index) => {
+            const percentual = ((item.value / total) * 100).toFixed(0);
+            return (
+              <Grid size={{ xs: 6, sm: 12 }} key={item.id}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    p: 1,
+                    bgcolor: `${cores[index]}10`,
+                    borderRadius: 1.5,
+                    border: `1px solid ${cores[index]}30`,
+                    transition: 'all 0.2s ease',
+                    '&:hover': {
+                      bgcolor: `${cores[index]}20`,
+                      transform: 'translateX(4px)',
+                    },
+                  }}
+                >
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Box
+                      sx={{
+                        width: 12,
+                        height: 12,
+                        borderRadius: '50%',
+                        bgcolor: cores[index],
+                      }}
+                    />
+                    <Typography variant="caption" sx={{ fontWeight: 500, color: '#1e293b' }}>
+                      {item.label}
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row" spacing={1} alignItems="center">
+                    <Typography variant="caption" sx={{ fontWeight: 700, color: cores[index] }}>
+                      {item.value}%
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: '#64748b', fontSize: '0.65rem' }}>
+                      ({percentual}%)
+                    </Typography>
+                  </Stack>
+                </Box>
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Stack>
 
       {selectedData && (
         <PieChartModal
