@@ -6,6 +6,7 @@ import SecurityIcon from '@mui/icons-material/Security';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useMemo } from 'react';
 import RadarChartModal from './RadarChartModal';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface RadarSeries {
   id: string;
@@ -26,6 +27,7 @@ interface RadarMetric {
 }
 
 const RadarChart: React.FC = () => {
+  const { colors } = useThemeMode();
   const [openModal, setOpenModal] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState<string>('');
   const [selectedData, setSelectedData] = useState<any>(null);
@@ -186,7 +188,7 @@ const RadarChart: React.FC = () => {
           variant="h6" 
           sx={{ 
             fontWeight: 700, 
-            color: '#1e293b',
+            color: colors.textPrimary,
             mb: 0.5,
           }}
         >
@@ -195,7 +197,7 @@ const RadarChart: React.FC = () => {
         <Typography 
           variant="body2" 
           sx={{ 
-            color: '#64748b',
+            color: colors.textSecondary,
             fontSize: '0.875rem',
           }}
         >
@@ -209,10 +211,10 @@ const RadarChart: React.FC = () => {
         display: 'flex', 
         justifyContent: 'center',
         alignItems: 'center',
-        bgcolor: '#f8fafc',
+        bgcolor: colors.chartBg,
         borderRadius: 2,
         p: 3,
-        border: '1px solid rgba(0, 0, 0, 0.05)',
+        border: `1px solid ${colors.cardBorder}`,
       }}>
         <MuiRadarChart
           width={550}
@@ -236,9 +238,9 @@ const RadarChart: React.FC = () => {
             <Box
               sx={{
                 p: 2,
-                bgcolor: '#ffffff',
+                bgcolor: colors.cardBg,
                 borderRadius: 2,
-                border: '1px solid rgba(0, 0, 0, 0.08)',
+                border: `1px solid ${colors.cardBorder}`,
                 transition: 'all 0.2s ease',
                 '&:hover': {
                   transform: 'translateY(-2px)',

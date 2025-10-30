@@ -1,7 +1,8 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, memo, useCallback } from 'react';
 import { Box, Typography, Stack, Chip, Grid } from '@mui/material';
 import { PieChart as MuiPieChart } from '@mui/x-charts/PieChart';
 import PieChartModal from './PieChartModal';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface PieData {
   id: number;
@@ -23,6 +24,7 @@ interface PieChartProps {
 }
 
 const PieChart: React.FC<PieChartProps> = ({ data: propData }) => {
+  const { colors } = useThemeMode();
   const [openModal, setOpenModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedData, setSelectedData] = useState<DetailData | null>(null);
@@ -112,7 +114,7 @@ const PieChart: React.FC<PieChartProps> = ({ data: propData }) => {
     },
   };
 
-  const handleItemClick = (_event: any, itemIdentifier: any) => {
+  const handleItemClick = useCallback((_event: any, itemIdentifier: any) => {
     // O itemIdentifier pode ter dataIndex ou itemIndex dependendo da versão
     const itemIndex = itemIdentifier?.dataIndex ?? itemIdentifier?.itemIndex ?? itemIdentifier?.index;
     const clickedItem = data.find((item) => item.id === itemIndex);
@@ -121,13 +123,13 @@ const PieChart: React.FC<PieChartProps> = ({ data: propData }) => {
       setSelectedData(detailedData[clickedItem.label]);
       setOpenModal(true);
     }
-  };
+  }, [data, detailedData]);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setOpenModal(false);
     setSelectedCategory('');
     setSelectedData(null);
-  };
+  }, []);
 
   const total = useMemo(() => {
     return data.reduce((acc, item) => acc + item.value, 0);
@@ -148,7 +150,7 @@ const PieChart: React.FC<PieChartProps> = ({ data: propData }) => {
             variant="h6" 
             sx={{ 
               fontWeight: 700, 
-              color: '#1e293b',
+              color: colors.textPrimary,
               mb: 0.5,
             }}
           >
@@ -157,7 +159,7 @@ const PieChart: React.FC<PieChartProps> = ({ data: propData }) => {
           <Typography 
             variant="body2" 
             sx={{ 
-              color: '#64748b',
+              color: colors.textSecondary,
               fontSize: '0.875rem',
             }}
           >
@@ -174,11 +176,11 @@ const PieChart: React.FC<PieChartProps> = ({ data: propData }) => {
             border: `1px solid ${cores[0]}30`,
           }}
         >
-          <Typography variant="caption" sx={{ color: '#64748b', fontSize: '0.7rem', display: 'block' }}>
+          <Typography variant="caption" sx={{ color: colors.textSecondary, fontSize: '0.7rem', display: 'block' }}>
             Total de Dispositivos
           </Typography>
           <Stack direction="row" spacing={2} alignItems="baseline" sx={{ mt: 0.5 }}>
-            <Typography variant="h4" sx={{ fontWeight: 700, color: '#1e293b' }}>
+            <Typography variant="h4" sx={{ fontWeight: 700, color: colors.textPrimary }}>
               {total.toLocaleString('pt-BR')}
             </Typography>
             <Chip
@@ -201,10 +203,10 @@ const PieChart: React.FC<PieChartProps> = ({ data: propData }) => {
           height: 300, 
           display: 'flex', 
           justifyContent: 'center',
-          bgcolor: '#f8fafc',
+          bgcolor: colors.chartBg,
           borderRadius: 2,
           p: 2,
-          border: '1px solid rgba(0, 0, 0, 0.05)',
+          border: `1px solid ${colors.cardBorder}`,
         }}>
           <MuiPieChart
             series={[
@@ -262,7 +264,7 @@ const PieChart: React.FC<PieChartProps> = ({ data: propData }) => {
                         bgcolor: cores[index],
                       }}
                     />
-                    <Typography variant="caption" sx={{ fontWeight: 500, color: '#1e293b' }}>
+                    <Typography variant="caption" sx={{ fontWeight: 500, color: colors.textPrimary }}>
                       {item.label}
                     </Typography>
                   </Stack>
@@ -270,7 +272,7 @@ const PieChart: React.FC<PieChartProps> = ({ data: propData }) => {
                     <Typography variant="caption" sx={{ fontWeight: 700, color: cores[index] }}>
                       {item.value}%
                     </Typography>
-                    <Typography variant="caption" sx={{ color: '#64748b', fontSize: '0.65rem' }}>
+                    <Typography variant="caption" sx={{ color: colors.textSecondary, fontSize: '0.65rem' }}>
                       ({percentual}%)
                     </Typography>
                   </Stack>
@@ -293,5 +295,5 @@ const PieChart: React.FC<PieChartProps> = ({ data: propData }) => {
   );
 };
 
-export default PieChart;
+export default memo(PieChart);
 

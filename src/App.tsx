@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { ThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { 
   Container, 
@@ -18,17 +18,26 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TimelineIcon from '@mui/icons-material/Timeline';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
-import LineChart from './components/LineChart';
-import BarChart from './components/BarChart';
-import PieChart from './components/PieChart';
-import AreaChart from './components/AreaChart';
-import ScatterChart from './components/ScatterChart';
-import SparklineChart from './components/SparklineChart';
-import GaugeChart from './components/GaugeChart';
-import FunnelChart from './components/FunnelChart';
-import RadarChart from './components/RadarChart';
-import ClinicStats from './components/ClinicStats';
-import FilterPanel, { FilterState } from './components/FilterPanel';
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  AreaChart,
+  ScatterChart,
+  SparklineChart,
+  GaugeChart,
+  FunnelChart,
+  RadarChart,
+  ClinicStats,
+} from './components/charts';
+import Toolbar from './components/Toolbar';
+import FloatingActionButton from './components/FloatingActionButton';
+import SkeletonChart from './components/SkeletonChart';
+import LazyChartWrapper from './components/LazyChartWrapper';
+import ErrorBoundary from './components/ErrorBoundary';
+import BundleAnalyzer from './components/BundleAnalyzer';
+import { DashboardProvider, useDashboard } from './contexts/DashboardContext';
+import { useLazyCharts } from './hooks/useLazyCharts';
 
 const fadeInUp = keyframes`
   from {
@@ -50,9 +59,10 @@ const float = keyframes`
   }
 `;
 
-const theme = createTheme({
+// Função para criar tema dinâmico
+const getTheme = (mode: 'light' | 'dark') => createTheme({
   palette: {
-    mode: 'light',
+    mode,
     primary: {
       main: '#6366f1',
       light: '#818cf8',
@@ -64,12 +74,12 @@ const theme = createTheme({
       dark: '#db2777',
     },
     background: {
-      default: '#f8fafc',
-      paper: '#ffffff',
+      default: mode === 'light' ? '#f8fafc' : '#0f172a',
+      paper: mode === 'light' ? '#ffffff' : '#1e293b',
     },
     text: {
-      primary: '#1e293b',
-      secondary: '#64748b',
+      primary: mode === 'light' ? '#1e293b' : '#f1f5f9',
+      secondary: mode === 'light' ? '#64748b' : '#94a3b8',
     },
   },
   typography: {
@@ -172,8 +182,9 @@ const ChartCard: React.FC<{
       sx={{
         p: { xs: 2, md: 3 },
         height: '100%',
-        bgcolor: '#ffffff',
-        border: '1px solid rgba(0, 0, 0,getahui: 0.08)',
+        bgcolor: 'background.paper',
+        border: '1px solid',
+        borderColor: 'divider',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         animation: `${fadeInUp} 0.6s ease-out ${delay}s both`,
@@ -197,13 +208,13 @@ const ChartCard: React.FC<{
           left: '-100%',
           width: '100%',
           height: '100%',
-          background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)',
+          background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)',
           transition: 'left 0.5s ease',
         },
         '&:hover': {
           transform: 'translateY(-8px)',
           boxShadow: '0 12px 24px rgba(0, 0, 0, 0.12)',
-          border: '1px solid rgba(99, 102, 241, 0.3)',
+          borderColor: 'primary.main',
           '&::before': {
             opacity: 1,
           },
@@ -238,97 +249,86 @@ const ChartCard: React.FC<{
   </Grid>
 );
 
-const App: React.FC = () => {
-  const [currentTab, setCurrentTab] = useState(0);
-  const [filters, setFilters] = useState<FilterState>({
-    period: { type: 'last30days' },
-    categories: ['Vendas', 'Receita', 'Produtos'],
-    dataTypes: ['Números', 'Percentuais'],
-    chartTypes: ['Linha', 'Barras', 'Pizza', 'Área'],
-    valueRange: [0, 1000000],
-    showTrends: true,
-    showProjections: false,
-    aggregation: 'monthly',
+// Componente interno que usa o context
+const DashboardContent: React.FC = () => {
+  const { 
+    state, 
+    setTab, 
+    setFilters, 
+    clearLoading, 
+    filteredData,
+    toggleTheme 
+  } = useDashboard();
+
+  const { currentTab, filters, isLoading } = state;
+  const [viewMode, setViewMode] = useState<'grid' | 'list' | 'compact'>('grid');
+
+  // Hook para gerenciar lazy loading dos gráficos
+  const { preloadChart, isChartLoaded } = useLazyCharts({
+    preloadDelay: 1500, // Preload após 1.5s
+    preloadOnHover: true,
+    preloadOnFocus: true,
   });
 
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setCurrentTab(newValue);
-  };
+  // IDs dos elementos para exportação
+  const dashboardElementIds = [
+    'line-chart',
+    'area-chart', 
+    'bar-chart',
+    'pie-chart',
+    'scatter-chart',
+    'sparkline-chart',
+    'gauge-chart',
+    'funnel-chart',
+    'radar-chart'
+  ];
 
-  const handleFiltersChange = (newFilters: FilterState) => {
+  // Dados dos gráficos para exportação CSV
+  const allChartData = useMemo(() => [
+    {
+      id: 'line-chart',
+      title: 'Evolução de Vendas e Receita',
+      data: filteredData.lineData,
+      type: 'line' as const,
+    },
+    {
+      id: 'bar-chart',
+      title: 'Vendas por Produto',
+      data: filteredData.barData,
+      type: 'bar' as const,
+    },
+    {
+      id: 'pie-chart',
+      title: 'Distribuição por Dispositivos',
+      data: filteredData.pieData,
+      type: 'pie' as const,
+    },
+  ], [filteredData]);
+
+  const handleTabChange = useCallback((_event: React.SyntheticEvent, newValue: number) => {
+    setTab(newValue);
+  }, [setTab]);
+
+  const handleFiltersChange = useCallback((newFilters: typeof filters) => {
     setFilters(newFilters);
-  };
+    // Simular loading quando filtros mudam
+    setTimeout(() => clearLoading(), 800);
+  }, [setFilters, clearLoading]);
 
-  // Função para gerar dados baseados nos filtros
-  const generateFilteredData = useMemo(() => {
-    const baseData = {
-      // Dados para LineChart
-      lineData: {
-        vendas: [120, 145, 138, 162, 178, 195, 210],
-        receita: [80, 95, 110, 125, 140, 155, 170],
-        meses: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'],
-      },
-      // Dados para BarChart
-      barData: [
-        { categoria: 'Q1', produtoA: 4000, produtoB: 2400, produtoC: 2000 },
-        { categoria: 'Q2', produtoA: 3000, produtoB: 1398, produtoC: 2210 },
-        { categoria: 'Q3', produtoA: 2000, produtoB: 9800, produtoC: 2290 },
-        { categoria: 'Q4', produtoA: 2780, produtoB: 3908, produtoC: 2000 },
-      ],
-      // Dados para PieChart
-      pieData: [
-        { id: 0, value: 45, label: 'Desktop' },
-        { id: 1, value: 30, label: 'Mobile' },
-        { id: 2, value: 15, label: 'Tablet' },
-        { id: 3, value: 7, label: 'Smart TV' },
-        { id: 4, value: 3, label: 'Outros' },
-      ],
-    };
-
-    // Aplicar filtros de período
-    let filteredData = { ...baseData };
+  // Parar loading inicial após um tempo
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      clearLoading();
+    }, 2000);
     
-    if (filters.period.type === 'last7days') {
-      // Simular dados dos últimos 7 dias
-      filteredData.lineData = {
-        vendas: [180, 195, 210, 225, 240, 255, 270],
-        receita: [120, 135, 150, 165, 180, 195, 210],
-        meses: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
-      };
-    } else if (filters.period.type === 'last90days') {
-      // Simular dados dos últimos 90 dias
-      filteredData.lineData = {
-        vendas: [100, 110, 120, 130, 140, 150, 160],
-        receita: [70, 80, 90, 100, 110, 120, 130],
-        meses: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7'],
-      };
-    }
+    return () => clearTimeout(timer);
+  }, [clearLoading]);
 
-    // Aplicar filtros de faixa de valores
-    const valueMultiplier = filters.valueRange[1] / 1000000;
-    filteredData.lineData.vendas = filteredData.lineData.vendas.map(v => Math.round(v * valueMultiplier));
-    filteredData.lineData.receita = filteredData.lineData.receita.map(v => Math.round(v * valueMultiplier));
-    
-    filteredData.barData = filteredData.barData.map(item => ({
-      ...item,
-      produtoA: Math.round(item.produtoA * valueMultiplier),
-      produtoB: Math.round(item.produtoB * valueMultiplier),
-      produtoC: Math.round(item.produtoC * valueMultiplier),
-    }));
-
-    // Aplicar filtros de categorias
-    if (!filters.categories.includes('Vendas')) {
-      filteredData.lineData.vendas = [];
-    }
-    if (!filters.categories.includes('Receita')) {
-      filteredData.lineData.receita = [];
-    }
-
-    return filteredData;
-  }, [filters]);
+  // Criar tema dinâmico baseado no estado
+  const dynamicTheme = useMemo(() => getTheme(state.theme), [state.theme]);
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={dynamicTheme}>
       <CssBaseline />
       <Box
         sx={{
@@ -453,11 +453,22 @@ const App: React.FC = () => {
           {/* Conteúdo das Abas */}
           {currentTab === 0 && (
             <>
-              {/* Painel de Filtros */}
-              <FilterPanel 
-                onFiltersChange={handleFiltersChange}
-                initialFilters={filters}
-              />
+              {/* Barra de Ferramentas Minimalista */}
+              <Box data-toolbar>
+                <Toolbar
+                  filters={filters}
+                  onFiltersChange={handleFiltersChange}
+                  dashboardElementIds={dashboardElementIds}
+                  allChartData={allChartData}
+                  onExport={(type, filename) => {
+                    console.log(`Exportando ${type}: ${filename}`);
+                  }}
+                  viewMode={viewMode}
+                  onViewModeChange={setViewMode}
+                  theme={state.theme}
+                  onThemeToggle={toggleTheme}
+                />
+              </Box>
 
               {/* Seção: Análises Temporais */}
           <SectionHeader
@@ -468,11 +479,23 @@ const App: React.FC = () => {
           />
           <Grid container spacing={3}>
             <ChartCard delay={0.3}>
-              <LineChart data={generateFilteredData.lineData} />
+              <LazyChartWrapper variant="line" height={300}>
+                <ErrorBoundary>
+                  <Box id="line-chart">
+                    <LineChart data={filteredData.lineData} />
+                  </Box>
+                </ErrorBoundary>
+              </LazyChartWrapper>
             </ChartCard>
 
             <ChartCard delay={0.4}>
-              <AreaChart />
+              <LazyChartWrapper variant="area" height={300}>
+                <ErrorBoundary>
+                  <Box id="area-chart">
+                    <AreaChart />
+                  </Box>
+                </ErrorBoundary>
+              </LazyChartWrapper>
             </ChartCard>
           </Grid>
 
@@ -485,15 +508,33 @@ const App: React.FC = () => {
           />
           <Grid container spacing={3}>
             <ChartCard delay={0.6}>
-              <BarChart data={generateFilteredData.barData} />
+              <LazyChartWrapper variant="bar" height={300}>
+                <ErrorBoundary>
+                  <Box id="bar-chart">
+                    <BarChart data={filteredData.barData} />
+                  </Box>
+                </ErrorBoundary>
+              </LazyChartWrapper>
             </ChartCard>
 
             <ChartCard delay={0.7}>
-              <PieChart data={generateFilteredData.pieData} />
+              <LazyChartWrapper variant="pie" height={300}>
+                <ErrorBoundary>
+                  <Box id="pie-chart">
+                    <PieChart data={filteredData.pieData} />
+                  </Box>
+                </ErrorBoundary>
+              </LazyChartWrapper>
             </ChartCard>
 
             <ChartCard delay={0.8}>
-              <ScatterChart />
+              <LazyChartWrapper variant="scatter" height={300}>
+                <ErrorBoundary>
+                  <Box id="scatter-chart">
+                    <ScatterChart />
+                  </Box>
+                </ErrorBoundary>
+              </LazyChartWrapper>
             </ChartCard>
 
             <Grid size={{ xs: 12, md: 6 }}>
@@ -502,8 +543,9 @@ const App: React.FC = () => {
                 sx={{
                   p: 3,
                   height: '100%',
-                  bgcolor: '#ffffff',
-                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  bgcolor: 'background.paper',
+                  border: '1px solid',
+                  borderColor: 'divider',
                   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
                   transition: 'all 0.3s ease',
                   animation: `${fadeInUp} 0.8s ease-out 0.6s both`,
@@ -527,16 +569,34 @@ const App: React.FC = () => {
                 >
                   ⚡ Sparkline Chart
                 </Typography>
-                <SparklineChart />
+                <LazyChartWrapper variant="sparkline" height={200}>
+                  <ErrorBoundary>
+                    <Box id="sparkline-chart">
+                      <SparklineChart />
+                    </Box>
+                  </ErrorBoundary>
+                </LazyChartWrapper>
               </Paper>
             </Grid>
 
             <ChartCard delay={0.85}>
-              <GaugeChart />
+              <LazyChartWrapper variant="gauge" height={300}>
+                <ErrorBoundary>
+                  <Box id="gauge-chart">
+                    <GaugeChart />
+                  </Box>
+                </ErrorBoundary>
+              </LazyChartWrapper>
             </ChartCard>
 
             <ChartCard delay={0.9}>
-              <FunnelChart />
+              <LazyChartWrapper variant="funnel" height={300}>
+                <ErrorBoundary>
+                  <Box id="funnel-chart">
+                    <FunnelChart />
+                  </Box>
+                </ErrorBoundary>
+              </LazyChartWrapper>
             </ChartCard>
 
             <Grid size={{ xs: 12 }}>
@@ -544,8 +604,9 @@ const App: React.FC = () => {
                 elevation={0}
                 sx={{
                   p: 3,
-                  bgcolor: '#ffffff',
-                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  bgcolor: 'background.paper',
+                  border: '1px solid',
+                  borderColor: 'divider',
                   boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
                   transition: 'all 0.3s ease',
                   animation: `${fadeInUp} 0.8s ease-out 0.8s both`,
@@ -556,7 +617,13 @@ const App: React.FC = () => {
                   },
                 }}
               >
-                <RadarChart />
+                <LazyChartWrapper variant="radar" height={400}>
+                  <ErrorBoundary>
+                    <Box id="radar-chart">
+                      <RadarChart />
+                    </Box>
+                  </ErrorBoundary>
+                </LazyChartWrapper>
               </Paper>
             </Grid>
           </Grid>
@@ -564,12 +631,53 @@ const App: React.FC = () => {
           )}
 
           {currentTab === 1 && (
-            <ClinicStats />
+            <LazyChartWrapper variant="bar" height={600}>
+              <ErrorBoundary>
+                <ClinicStats />
+              </ErrorBoundary>
+            </LazyChartWrapper>
           )}
         </Container>
+        
+        {/* Bundle Analyzer (apenas em desenvolvimento) */}
+        <BundleAnalyzer />
+
+        {/* Botão de Ação Flutuante */}
+        <FloatingActionButton
+          onFiltersClick={() => {
+            // Scroll para a toolbar
+            const toolbar = document.querySelector('[data-toolbar]');
+            if (toolbar) {
+              toolbar.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+          onExportClick={() => {
+            // Scroll para a toolbar
+            const toolbar = document.querySelector('[data-toolbar]');
+            if (toolbar) {
+              toolbar.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
+          onRefreshClick={() => {
+            window.location.reload();
+          }}
+          activeFiltersCount={Object.values(filters).filter(v => 
+            Array.isArray(v) ? v.length > 0 : v !== undefined && v !== null
+          ).length}
+        />
+
       </Box>
     </ThemeProvider>
   );
 }
+
+// Componente App principal com Provider
+const App: React.FC = () => {
+  return (
+    <DashboardProvider>
+      <DashboardContent />
+    </DashboardProvider>
+  );
+};
 
 export default App;

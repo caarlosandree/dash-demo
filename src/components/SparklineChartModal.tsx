@@ -20,6 +20,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { LineChart as MuiLineChart } from '@mui/x-charts/LineChart';
 import { BarChart as MuiBarChart } from '@mui/x-charts/BarChart';
+import { useThemeMode } from '../hooks/useThemeMode';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -63,6 +64,7 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
   data,
   metricDetails 
 }) => {
+  const { colors } = useThemeMode();
   return (
     <Dialog
       open={open}
@@ -115,8 +117,8 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -134,8 +136,8 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -160,8 +162,8 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -179,8 +181,8 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -208,7 +210,7 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -254,7 +256,7 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -296,7 +298,7 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -314,9 +316,9 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
                     <TableRow>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -324,9 +326,9 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -336,7 +338,7 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
                   </TableHead>
                   <TableBody>
                     <TableRow>
-                      <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                      <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                         Valor Atual
                       </TableCell>
                       <TableCell sx={{ color: '#64748b', fontWeight: 600 }}>
@@ -344,7 +346,7 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                      <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                         Média
                       </TableCell>
                       <TableCell sx={{ color: '#64748b', fontWeight: 600 }}>
@@ -352,7 +354,7 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                      <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                         Mínimo
                       </TableCell>
                       <TableCell sx={{ color: '#64748b', fontWeight: 600 }}>
@@ -360,7 +362,7 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                      <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                         Máximo
                       </TableCell>
                       <TableCell sx={{ color: '#64748b', fontWeight: 600 }}>
@@ -368,7 +370,7 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                      <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                         Benchmark
                       </TableCell>
                       <TableCell sx={{ color: '#64748b', fontWeight: 600 }}>
@@ -388,7 +390,7 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -406,9 +408,9 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
                     <TableRow>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -416,9 +418,9 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -426,9 +428,9 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -442,11 +444,11 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
                         key={index}
                         sx={{
                           '&:hover': {
-                            bgcolor: '#f8fafc',
+                            bgcolor: colors.chartBg,
                           },
                         }}
                       >
-                        <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                        <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                           {segmento.segmento}
                         </TableCell>
                         <TableCell sx={{ color: '#64748b', fontWeight: 600 }}>
@@ -470,7 +472,7 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -482,7 +484,7 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
                     <Box
                       sx={{
                         p: 2,
-                        bgcolor: '#f8fafc',
+                        bgcolor: colors.chartBg,
                         borderRadius: 2,
                         border: `1px solid ${metricDetails.cor}30`,
                         display: 'flex',
@@ -491,7 +493,7 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
                       }}
                     >
                       <TrendingUpIcon sx={{ color: metricDetails.cor, fontSize: 20, mt: 0.5 }} />
-                      <Typography variant="body2" sx={{ color: '#1e293b' }}>
+                      <Typography variant="body2" sx={{ color: colors.textPrimary }}>
                         {insight}
                       </Typography>
                     </Box>
@@ -521,7 +523,7 @@ const SparklineChartModal: React.FC<SparklineChartModalProps> = ({
                       ) : (
                         <AttachMoneyIcon sx={{ color: '#818cf8', fontSize: 20, mt: 0.5 }} />
                       )}
-                      <Typography variant="body2" sx={{ color: '#1e293b' }}>
+                      <Typography variant="body2" sx={{ color: colors.textPrimary }}>
                         {alerta.mensagem}
                       </Typography>
                     </Box>

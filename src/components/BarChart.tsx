@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, memo, useMemo, useCallback } from 'react';
 import { Box, Typography, Stack, Chip, Grid } from '@mui/material';
 import { BarChart as MuiBarChart } from '@mui/x-charts/BarChart';
-import { useMemo } from 'react';
 import BarChartModal from './BarChartModal';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface BarData {
   categoria: string;
@@ -17,6 +17,7 @@ interface BarChartProps {
 }
 
 const BarChart: React.FC<BarChartProps> = ({ data: propData }) => {
+  const { colors } = useThemeMode();
   const [openModal, setOpenModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<string>('');
   const [selectedData, setSelectedData] = useState<any>(null);
@@ -41,7 +42,7 @@ const BarChart: React.FC<BarChartProps> = ({ data: propData }) => {
       const total = data.reduce((acc, item) => acc + (item[prod.key] as number), 0);
       return { ...prod, total };
     });
-  }, [data]);
+  }, [data, produtos]);
 
   const melhorProduto = useMemo(() => {
     return vendasPorProduto.reduce((max, prod) => 
@@ -123,7 +124,7 @@ const BarChart: React.FC<BarChartProps> = ({ data: propData }) => {
     },
   };
 
-  const handleBarClick = (event: any, itemIdentifier: any) => {
+  const handleBarClick = useCallback((event: any, itemIdentifier: any) => {
     const serieId = itemIdentifier?.dataIndex ?? itemIdentifier?.itemIndex ?? itemIdentifier?.index;
     const serieName = itemIdentifier?.seriesId;
     
@@ -132,13 +133,13 @@ const BarChart: React.FC<BarChartProps> = ({ data: propData }) => {
       setSelectedData(detailedData[serieName]);
       setOpenModal(true);
     }
-  };
+  }, [detailedData]);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setOpenModal(false);
     setSelectedProduct('');
     setSelectedData(null);
-  };
+  }, []);
 
   return (
     <Stack spacing={2} sx={{ height: '100%' }}>
@@ -148,7 +149,7 @@ const BarChart: React.FC<BarChartProps> = ({ data: propData }) => {
           variant="h6" 
           sx={{ 
             fontWeight: 700, 
-            color: '#1e293b',
+            color: colors.textPrimary,
             mb: 0.5,
           }}
         >
@@ -157,7 +158,7 @@ const BarChart: React.FC<BarChartProps> = ({ data: propData }) => {
         <Typography 
           variant="body2" 
           sx={{ 
-            color: '#64748b',
+            color: colors.textSecondary,
             fontSize: '0.875rem',
           }}
         >
@@ -202,10 +203,10 @@ const BarChart: React.FC<BarChartProps> = ({ data: propData }) => {
       <Box sx={{ 
         width: '100%', 
         height: 300,
-        bgcolor: '#f8fafc',
+        bgcolor: colors.chartBg,
         borderRadius: 2,
         p: 2,
-        border: '1px solid rgba(0, 0, 0, 0.05)',
+        border: `1px solid ${colors.cardBorder}`,
       }}>
         <MuiBarChart
           width={undefined}
@@ -219,7 +220,6 @@ const BarChart: React.FC<BarChartProps> = ({ data: propData }) => {
           colors={['#818cf8', '#f472b6', '#34d399']}
           xAxis={[{ dataKey: 'categoria', scaleType: 'band' }]}
           margin={{ top: 10, bottom: 20, left: 30, right: 30 }}
-          onItemClick={handleBarClick}
           slotProps={{
             bar: {
               cursor: 'pointer',
@@ -243,7 +243,7 @@ const BarChart: React.FC<BarChartProps> = ({ data: propData }) => {
                 border: `1px solid ${prod.color}30`,
               }}
             >
-              <Typography variant="body2" sx={{ fontWeight: 500, color: '#1e293b' }}>
+              <Typography variant="body2" sx={{ fontWeight: 500, color: colors.textPrimary }}>
                 {prod.name}
               </Typography>
               <Typography variant="body2" sx={{ fontWeight: 700, color: prod.color }}>
@@ -268,4 +268,4 @@ const BarChart: React.FC<BarChartProps> = ({ data: propData }) => {
   );
 };
 
-export default BarChart;
+export default memo(BarChart);

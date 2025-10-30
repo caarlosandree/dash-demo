@@ -5,6 +5,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { useMemo } from 'react';
 import ScatterChartModal from './ScatterChartModal';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface ScatterData {
   x: number;
@@ -17,6 +18,7 @@ interface ScatterDataCollection {
 }
 
 const ScatterChart: React.FC = () => {
+  const { colors } = useThemeMode();
   const [openModal, setOpenModal] = useState(false);
   const [selectedPoint, setSelectedPoint] = useState<string>('');
   const [selectedData, setSelectedData] = useState<any>(null);
@@ -176,7 +178,7 @@ const ScatterChart: React.FC = () => {
           variant="h6" 
           sx={{ 
             fontWeight: 700, 
-            color: '#1e293b',
+            color: colors.textPrimary,
             mb: 0.5,
           }}
         >
@@ -185,7 +187,7 @@ const ScatterChart: React.FC = () => {
         <Typography 
           variant="body2" 
           sx={{ 
-            color: '#64748b',
+            color: colors.textSecondary,
             fontSize: '0.875rem',
           }}
         >
@@ -205,7 +207,7 @@ const ScatterChart: React.FC = () => {
               textAlign: 'center',
             }}
           >
-            <Typography variant="caption" sx={{ color: '#64748b', fontSize: '0.7rem', display: 'block' }}>
+            <Typography variant="caption" sx={{ color: colors.textSecondary, fontSize: '0.7rem', display: 'block' }}>
               Média de Notas
             </Typography>
             <Typography variant="h5" sx={{ fontWeight: 700, color: '#818cf8', mt: 0.5 }}>
@@ -273,10 +275,10 @@ const ScatterChart: React.FC = () => {
       <Box sx={{ 
         width: '100%', 
         height: 400,
-        bgcolor: '#f8fafc',
+        bgcolor: colors.chartBg,
         borderRadius: 2,
         p: 2,
-        border: '1px solid rgba(0, 0, 0, 0.05)',
+        border: `1px solid ${colors.cardBorder}`,
       }}>
         <MuiScatterChart
           width={undefined}

@@ -5,6 +5,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { useMemo } from 'react';
 import GaugeChartModal from './GaugeChartModal';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface GaugeMetrics {
   value: number;
@@ -15,6 +16,7 @@ interface GaugeMetrics {
 }
 
 const GaugeChart: React.FC = () => {
+  const { colors } = useThemeMode();
   const [openModal, setOpenModal] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState<string>('');
   const [selectedData, setSelectedData] = useState<any>(null);
@@ -124,7 +126,7 @@ const GaugeChart: React.FC = () => {
           variant="h6" 
           sx={{ 
             fontWeight: 700, 
-            color: '#1e293b',
+            color: colors.textPrimary,
             mb: 0.5,
           }}
         >
@@ -133,7 +135,7 @@ const GaugeChart: React.FC = () => {
         <Typography 
           variant="body2" 
           sx={{ 
-            color: '#64748b',
+            color: colors.textSecondary,
             fontSize: '0.875rem',
           }}
         >
@@ -238,8 +240,8 @@ const GaugeChart: React.FC = () => {
         spacing={2} 
         justifyContent="space-around"
         sx={{
-          pt: 1.5,
-          borderTop: '1px solid rgba(0, 0, 0, 0.08)',
+                pt: 1.5,
+                borderTop: `1px solid ${colors.cardBorder}`,
         }}
       >
         {/* Meta */}
@@ -256,7 +258,7 @@ const GaugeChart: React.FC = () => {
             <Typography 
               variant="caption" 
               sx={{ 
-                color: '#64748b',
+                color: colors.textSecondary,
                 fontSize: '0.7rem',
                 display: 'block',
                 mb: 0.5,

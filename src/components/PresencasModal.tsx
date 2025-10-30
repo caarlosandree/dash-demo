@@ -26,6 +26,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { BarChart as MuiBarChart } from '@mui/x-charts/BarChart';
 import { PieChart as MuiPieChart } from '@mui/x-charts/PieChart';
 import ProfissionalModal from './ProfissionalModal';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface Agendamento {
   id: number;
@@ -52,6 +53,7 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
   agendamentos,
   totalAgendamentos,
 }) => {
+  const { colors } = useThemeMode();
   const isPresenca = status === 'Presença';
   
   // Estados para paginação e busca na tabela
@@ -195,7 +197,7 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
       PaperProps={{
         sx: {
           borderRadius: 3,
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+          boxShadow: `0 20px 60px ${colors.cardBorder}`,
           maxHeight: '90vh',
         },
       }}
@@ -206,7 +208,7 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
           justifyContent: 'space-between',
           alignItems: 'center',
           pb: 2,
-          borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+          borderBottom: `1px solid ${colors.cardBorder}`,
           background: isPresenca
             ? 'linear-gradient(135deg, #10b981 0%, #34d399 100%)'
             : 'linear-gradient(135deg, #ef4444 0%, #f87171 100%)',
@@ -245,8 +247,8 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.highlight,
+                border: `1px solid ${colors.cardBorder}`,
                 height: '100%',
               }}
             >
@@ -268,8 +270,8 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.highlight,
+                border: `1px solid ${colors.cardBorder}`,
                 height: '100%',
               }}
             >
@@ -288,8 +290,8 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.highlight,
+                border: `1px solid ${colors.cardBorder}`,
                 height: '100%',
               }}
             >
@@ -308,8 +310,8 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.highlight,
+                border: `1px solid ${colors.cardBorder}`,
                 height: '100%',
               }}
             >
@@ -328,8 +330,8 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
               elevation={0}
               sx={{
                 p: 3,
-                bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -371,8 +373,8 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
               elevation={0}
               sx={{
                 p: 3,
-                bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 1, fontWeight: 600 }}>
@@ -381,7 +383,7 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
               <Typography
                 variant="caption"
                 sx={{
-                  color: '#64748b',
+                  color: colors.textSecondary,
                   fontSize: '0.75rem',
                   mb: 2,
                   display: 'block',
@@ -431,8 +433,8 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
               elevation={0}
               sx={{
                 p: 3,
-                bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -445,7 +447,7 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
                       <Box
                         sx={{
                           p: 2,
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.highlight,
                           borderRadius: 2,
                           border: `1px solid ${isPresenca ? '#10b98130' : '#ef444430'}`,
                         }}
@@ -476,15 +478,15 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
               elevation={0}
               sx={{
                 p: 3,
-                bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Lista de Agendamentos - {status}
                 </Typography>
-                <Typography variant="body2" sx={{ color: '#64748b' }}>
+                <Typography variant="body2" sx={{ color: colors.textSecondary }}>
                   {agendamentosFiltrados.length} resultado(s)
                 </Typography>
               </Stack>
@@ -502,7 +504,7 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SearchIcon sx={{ color: '#64748b' }} />
+                      <SearchIcon sx={{ color: colors.textSecondary }} />
                     </InputAdornment>
                   ),
                 }}
@@ -519,7 +521,7 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
               <TableContainer
                 sx={{
                   borderRadius: 2,
-                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  border: `1px solid ${colors.cardBorder}`,
                   maxHeight: 400,
                 }}
               >
@@ -528,50 +530,50 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
                     <TableRow>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.highlight,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         ID
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.highlight,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         Data
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.highlight,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         Paciente
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.highlight,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         Profissional
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.highlight,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         Procedimento
@@ -582,7 +584,7 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
                     {agendamentosPaginados.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
-                          <Typography variant="body2" sx={{ color: '#64748b' }}>
+                          <Typography variant="body2" sx={{ color: colors.textSecondary }}>
                             Nenhum agendamento encontrado.
                           </Typography>
                         </TableCell>
@@ -593,21 +595,21 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
                           key={agendamento.id}
                           sx={{
                             '&:hover': {
-                              bgcolor: '#f8fafc',
+                              bgcolor: colors.highlight,
                             },
                           }}
                         >
-                          <TableCell sx={{ color: '#64748b', fontWeight: 600 }}>
+                          <TableCell sx={{ color: colors.textSecondary, fontWeight: 600 }}>
                             #{agendamento.id}
                           </TableCell>
-                          <TableCell sx={{ color: '#1e293b' }}>{agendamento.data}</TableCell>
-                          <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                          <TableCell sx={{ color: colors.textPrimary }}>{agendamento.data}</TableCell>
+                          <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                             {agendamento.paciente}
                           </TableCell>
-                          <TableCell sx={{ color: '#64748b' }}>
+                          <TableCell sx={{ color: colors.textSecondary }}>
                             {agendamento.profissional}
                           </TableCell>
-                          <TableCell sx={{ color: '#1e293b' }}>
+                          <TableCell sx={{ color: colors.textPrimary }}>
                             {agendamento.procedimento}
                           </TableCell>
                         </TableRow>
@@ -629,10 +631,10 @@ const PresencasModal: React.FC<PresencasModalProps> = ({
                 labelRowsPerPage="Itens por página:"
                 labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count !== -1 ? count : `mais de ${to}`}`}
                 sx={{
-                  borderTop: '1px solid rgba(0, 0, 0, 0.08)',
+                  borderTop: `1px solid ${colors.cardBorder}`,
                   mt: 0,
                   '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': {
-                    color: '#64748b',
+                    color: colors.textSecondary,
                     fontWeight: 500,
                   },
                 }}

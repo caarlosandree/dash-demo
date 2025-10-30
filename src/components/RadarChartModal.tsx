@@ -21,6 +21,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { RadarChart as MuiRadarChart } from '@mui/x-charts/RadarChart';
 import { BarChart as MuiBarChart } from '@mui/x-charts/BarChart';
+import { useThemeMode } from '../hooks/useThemeMode';
 import SpeedIcon from '@mui/icons-material/Speed';
 import SecurityIcon from '@mui/icons-material/Security';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -59,6 +60,7 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
   data,
   metricDetails 
 }) => {
+  const { colors } = useThemeMode();
   return (
     <Dialog
       open={open}
@@ -117,8 +119,8 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -136,8 +138,8 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -155,8 +157,8 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -174,8 +176,8 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -203,7 +205,7 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -237,7 +239,7 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -274,7 +276,7 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -282,7 +284,7 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
               </Typography>
               <Stack spacing={2}>
                 <Box>
-                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 600, color: '#1e293b' }}>
+                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 600, color: colors.textPrimary }}>
                     Progresso Atual
                   </Typography>
                   <LinearProgress
@@ -304,7 +306,7 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
                 </Box>
                 
                 <Box>
-                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 600, color: '#1e293b' }}>
+                  <Typography variant="body2" sx={{ mb: 1, fontWeight: 600, color: colors.textPrimary }}>
                     Melhores Práticas
                   </Typography>
                   <Stack spacing={1}>
@@ -313,12 +315,12 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
                         key={index}
                         sx={{
                           p: 1.5,
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           borderRadius: 1,
                           border: `1px solid ${metricDetails.cor}30`,
                         }}
                       >
-                        <Typography variant="body2" sx={{ color: '#1e293b' }}>
+                        <Typography variant="body2" sx={{ color: colors.textPrimary }}>
                           {pratica}
                         </Typography>
                       </Box>
@@ -336,7 +338,7 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -354,9 +356,9 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
                     <TableRow>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -364,9 +366,9 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -374,9 +376,9 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -390,11 +392,11 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
                         key={index}
                         sx={{
                           '&:hover': {
-                            bgcolor: '#f8fafc',
+                            bgcolor: colors.chartBg,
                           },
                         }}
                       >
-                        <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                        <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                           {acao.acao}
                         </TableCell>
                         <TableCell>
@@ -429,7 +431,7 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -447,9 +449,9 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
                     <TableRow>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -457,9 +459,9 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -473,11 +475,11 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
                         key={index}
                         sx={{
                           '&:hover': {
-                            bgcolor: '#f8fafc',
+                            bgcolor: colors.chartBg,
                           },
                         }}
                       >
-                        <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                        <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                           {item.periodo}
                         </TableCell>
                         <TableCell sx={{ color: '#64748b', fontWeight: 600 }}>
@@ -498,7 +500,7 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -516,9 +518,9 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
                     <TableRow>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -526,9 +528,9 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -536,9 +538,9 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -552,11 +554,11 @@ const RadarChartModal: React.FC<RadarChartModalProps> = ({
                         key={index}
                         sx={{
                           '&:hover': {
-                            bgcolor: '#f8fafc',
+                            bgcolor: colors.chartBg,
                           },
                         }}
                       >
-                        <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                        <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                           {item.empresa}
                         </TableCell>
                         <TableCell sx={{ color: '#64748b', fontWeight: 600 }}>

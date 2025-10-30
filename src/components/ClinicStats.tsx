@@ -9,6 +9,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import { useMemo, useState } from 'react';
 import AgendamentosTable from './AgendamentosTable';
 import PresencasModal from './PresencasModal';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface Agendamento {
   id: number;
@@ -21,6 +22,7 @@ interface Agendamento {
 }
 
 const ClinicStats: React.FC = () => {
+  const { colors } = useThemeMode();
   // Estados para o modal
   const [openModal, setOpenModal] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<'Presença' | 'Falta'>('Presença');
@@ -348,13 +350,13 @@ const ClinicStats: React.FC = () => {
             sx={{
               p: 3,
               height: '100%',
-              bgcolor: '#ffffff',
-              border: '1px solid rgba(0, 0, 0, 0.08)',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
+              bgcolor: colors.chartBg,
+              border: `1px solid ${colors.cardBorder}`,
+              boxShadow: `0 2px 8px ${colors.cardBorder}`,
               transition: 'all 0.3s ease',
               '&:hover': {
                 transform: 'translateY(-4px)',
-                boxShadow: '0 12px 24px rgba(0, 0, 0, 0.12)',
+                boxShadow: `0 12px 24px ${colors.cardBorder}`,
               },
             }}
           >
@@ -363,7 +365,7 @@ const ClinicStats: React.FC = () => {
                 variant="h6"
                 sx={{
                   fontWeight: 700,
-                  color: '#1e293b',
+                  color: colors.textPrimary,
                   mb: 0.5,
                 }}
               >
@@ -372,7 +374,7 @@ const ClinicStats: React.FC = () => {
               <Typography
                 variant="body2"
                 sx={{
-                  color: '#64748b',
+                  color: colors.textSecondary,
                   fontSize: '0.875rem',
                   mb: 3,
                 }}
@@ -384,10 +386,10 @@ const ClinicStats: React.FC = () => {
             <Box sx={{ 
               width: '100%', 
               height: 350,
-              bgcolor: '#f8fafc',
+              bgcolor: colors.highlight,
               borderRadius: 2,
               p: 2,
-              border: '1px solid rgba(0, 0, 0, 0.05)',
+              border: `1px solid ${colors.cardBorder}`,
             }}>
               <MuiBarChart
                 width={undefined}
@@ -406,12 +408,12 @@ const ClinicStats: React.FC = () => {
               sx={{
                 mt: 2,
                 p: 2,
-                bgcolor: '#ef444415',
+                bgcolor: colors.warningBg,
                 borderRadius: 2,
-                border: '1px solid #ef444430',
+                border: `1px solid ${colors.secondary}30`,
               }}
             >
-              <Typography variant="body2" sx={{ color: '#64748b', fontSize: '0.875rem' }}>
+              <Typography variant="body2" sx={{ color: colors.textSecondary, fontSize: '0.875rem' }}>
                 <strong>Dia com mais faltas:</strong> {diaMaisFaltas.dia} ({diaMaisFaltas.faltas} faltas)
               </Typography>
             </Box>
@@ -425,13 +427,13 @@ const ClinicStats: React.FC = () => {
             sx={{
               p: 3,
               height: '100%',
-              bgcolor: '#ffffff',
-              border: '1px solid rgba(0, 0, 0, 0.08)',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
+              bgcolor: colors.chartBg,
+              border: `1px solid ${colors.cardBorder}`,
+              boxShadow: `0 2px 8px ${colors.cardBorder}`,
               transition: 'all 0.3s ease',
               '&:hover': {
                 transform: 'translateY(-4px)',
-                boxShadow: '0 12px 24px rgba(0, 0, 0, 0.12)',
+                boxShadow: `0 12px 24px ${colors.cardBorder}`,
               },
             }}
           >
@@ -440,7 +442,7 @@ const ClinicStats: React.FC = () => {
                 variant="h6"
                 sx={{
                   fontWeight: 700,
-                  color: '#1e293b',
+                  color: colors.textPrimary,
                   mb: 0.5,
                 }}
               >
@@ -449,7 +451,7 @@ const ClinicStats: React.FC = () => {
               <Typography
                 variant="body2"
                 sx={{
-                  color: '#64748b',
+                  color: colors.textSecondary,
                   fontSize: '0.875rem',
                   mb: 3,
                 }}
@@ -463,13 +465,13 @@ const ClinicStats: React.FC = () => {
               height: 300, 
               display: 'flex', 
               justifyContent: 'center',
-              bgcolor: '#f8fafc',
+              bgcolor: colors.highlight,
               borderRadius: 2,
               p: 2,
-              border: '1px solid rgba(0, 0, 0, 0.05)',
+              border: `1px solid ${colors.cardBorder}`,
               cursor: 'pointer',
               '&:hover': {
-                bgcolor: '#f1f5f9',
+                bgcolor: colors.chartBg,
               },
             }}>
               <MuiPieChart
@@ -495,7 +497,7 @@ const ClinicStats: React.FC = () => {
             <Typography
               variant="caption"
               sx={{
-                color: '#64748b',
+                color: colors.textSecondary,
                 fontSize: '0.75rem',
                 mt: 1,
                 display: 'block',
@@ -517,13 +519,13 @@ const ClinicStats: React.FC = () => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   p: 1.5,
-                  bgcolor: '#10b98115',
+                  bgcolor: colors.infoBg,
                   borderRadius: 1.5,
-                  border: '1px solid #10b98130',
+                  border: `1px solid ${colors.primary}30`,
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
                   '&:hover': {
-                    bgcolor: '#10b98125',
+                    bgcolor: colors.infoBg,
                     transform: 'translateX(4px)',
                   },
                 }}
@@ -534,14 +536,14 @@ const ClinicStats: React.FC = () => {
                       width: 12,
                       height: 12,
                       borderRadius: '50%',
-                      bgcolor: '#10b981',
+                      bgcolor: colors.primary,
                     }}
                   />
-                  <Typography variant="body2" sx={{ fontWeight: 500, color: '#1e293b' }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500, color: colors.textPrimary }}>
                     Presenças
                   </Typography>
                 </Stack>
-                <Typography variant="body2" sx={{ fontWeight: 700, color: '#10b981' }}>
+                <Typography variant="body2" sx={{ fontWeight: 700, color: colors.primary }}>
                   {totalPresencas.toLocaleString('pt-BR')}
                 </Typography>
               </Box>
@@ -556,13 +558,13 @@ const ClinicStats: React.FC = () => {
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   p: 1.5,
-                  bgcolor: '#ef444415',
+                  bgcolor: colors.warningBg,
                   borderRadius: 1.5,
-                  border: '1px solid #ef444430',
+                  border: `1px solid ${colors.secondary}30`,
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
                   '&:hover': {
-                    bgcolor: '#ef444425',
+                    bgcolor: colors.warningBg,
                     transform: 'translateX(4px)',
                   },
                 }}
@@ -573,14 +575,14 @@ const ClinicStats: React.FC = () => {
                       width: 12,
                       height: 12,
                       borderRadius: '50%',
-                      bgcolor: '#ef4444',
+                      bgcolor: colors.secondary,
                     }}
                   />
-                  <Typography variant="body2" sx={{ fontWeight: 500, color: '#1e293b' }}>
+                  <Typography variant="body2" sx={{ fontWeight: 500, color: colors.textPrimary }}>
                     Faltas
                   </Typography>
                 </Stack>
-                <Typography variant="body2" sx={{ fontWeight: 700, color: '#ef4444' }}>
+                <Typography variant="body2" sx={{ fontWeight: 700, color: colors.secondary }}>
                   {totalFaltas.toLocaleString('pt-BR')}
                 </Typography>
               </Box>

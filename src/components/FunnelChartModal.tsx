@@ -20,6 +20,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { BarChart as MuiBarChart } from '@mui/x-charts/BarChart';
+import { useThemeMode } from '../hooks/useThemeMode';
 import { LineChart as MuiLineChart } from '@mui/x-charts/LineChart';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
@@ -62,6 +63,7 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
   data,
   stageDetails 
 }) => {
+  const { colors } = useThemeMode();
   return (
     <Dialog
       open={open}
@@ -114,8 +116,8 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -133,8 +135,8 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -152,8 +154,8 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -171,8 +173,8 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -191,7 +193,7 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -228,7 +230,7 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -266,7 +268,7 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -284,9 +286,9 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
                     <TableRow>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -294,9 +296,9 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -304,9 +306,9 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -320,11 +322,11 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
                         key={index}
                         sx={{
                           '&:hover': {
-                            bgcolor: '#f8fafc',
+                            bgcolor: colors.chartBg,
                           },
                         }}
                       >
-                        <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                        <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                           {fator.fator}
                         </TableCell>
                         <TableCell>
@@ -359,7 +361,7 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -377,9 +379,9 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
                     <TableRow>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -387,9 +389,9 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -397,9 +399,9 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -413,11 +415,11 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
                         key={index}
                         sx={{
                           '&:hover': {
-                            bgcolor: '#f8fafc',
+                            bgcolor: colors.chartBg,
                           },
                         }}
                       >
-                        <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                        <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                           {acao.acao}
                         </TableCell>
                         <TableCell>
@@ -452,7 +454,7 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -464,7 +466,7 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
                     <Box
                       sx={{
                         p: 2,
-                        bgcolor: '#f8fafc',
+                        bgcolor: colors.chartBg,
                         borderRadius: 2,
                         border: `1px solid ${stageDetails.cor}30`,
                         display: 'flex',
@@ -473,7 +475,7 @@ const FunnelChartModal: React.FC<FunnelChartModalProps> = ({
                       }}
                     >
                       <ArrowForwardIcon sx={{ color: stageDetails.cor, fontSize: 20, mt: 0.5 }} />
-                      <Typography variant="body2" sx={{ color: '#1e293b' }}>
+                      <Typography variant="body2" sx={{ color: colors.textPrimary }}>
                         {insight}
                       </Typography>
                     </Box>

@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { BarChart as MuiBarChart } from '@mui/x-charts/BarChart';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface DetailData {
   materiais: { nome: string; quantidade: number }[];
@@ -29,6 +30,7 @@ interface PieChartModalProps {
 }
 
 const PieChartModal: React.FC<PieChartModalProps> = ({ open, onClose, category, data }) => {
+  const { colors } = useThemeMode();
   return (
     <Dialog
       open={open}
@@ -88,8 +90,8 @@ const PieChartModal: React.FC<PieChartModalProps> = ({ open, onClose, category, 
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -107,8 +109,8 @@ const PieChartModal: React.FC<PieChartModalProps> = ({ open, onClose, category, 
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -126,8 +128,8 @@ const PieChartModal: React.FC<PieChartModalProps> = ({ open, onClose, category, 
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -153,7 +155,7 @@ const PieChartModal: React.FC<PieChartModalProps> = ({ open, onClose, category, 
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -195,7 +197,7 @@ const PieChartModal: React.FC<PieChartModalProps> = ({ open, onClose, category, 
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -208,9 +210,9 @@ const PieChartModal: React.FC<PieChartModalProps> = ({ open, onClose, category, 
                       <Box
                         sx={{
                           p: 2,
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           borderRadius: 2,
-                          border: '1px solid rgba(0, 0, 0, 0.05)',
+                          border: `1px solid ${colors.cardBorder}`,
                         }}
                       >
                         <Typography variant="body2" color="text.secondary" gutterBottom>

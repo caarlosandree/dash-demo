@@ -23,6 +23,7 @@ import { LineChart as MuiLineChart } from '@mui/x-charts/LineChart';
 import SchoolIcon from '@mui/icons-material/School';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import PsychologyIcon from '@mui/icons-material/Psychology';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface ScatterChartModalProps {
   open: boolean;
@@ -57,6 +58,7 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
   data,
   pointDetails 
 }) => {
+  const { colors } = useThemeMode();
   return (
     <Dialog
       open={open}
@@ -109,8 +111,8 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -128,8 +130,8 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -147,8 +149,8 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -166,8 +168,8 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -186,7 +188,7 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -232,7 +234,7 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -276,7 +278,7 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -294,9 +296,9 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
                     <TableRow>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -304,9 +306,9 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -314,9 +316,9 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -324,9 +326,9 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
+                          color: colors.textPrimary,
                           borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
                         }}
                       >
@@ -340,11 +342,11 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
                         key={index}
                         sx={{
                           '&:hover': {
-                            bgcolor: '#f8fafc',
+                            bgcolor: colors.chartBg,
                           },
                         }}
                       >
-                        <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                        <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                           {item.metrica}
                         </TableCell>
                         <TableCell sx={{ color: '#64748b', fontWeight: 600 }}>
@@ -371,7 +373,7 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -406,7 +408,7 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
                               fontSize: '0.7rem',
                             }}
                           />
-                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#1e293b' }}>
+                          <Typography variant="body2" sx={{ fontWeight: 600, color: colors.textPrimary }}>
                             {recomendacao.area}
                           </Typography>
                         </Stack>
@@ -428,7 +430,7 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -446,7 +448,7 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
                     <Box
                       sx={{
                         p: 2,
-                        bgcolor: '#f8fafc',
+                        bgcolor: colors.chartBg,
                         borderRadius: 2,
                         border: `1px solid ${pointDetails.cor}30`,
                         display: 'flex',
@@ -455,7 +457,7 @@ const ScatterChartModal: React.FC<ScatterChartModalProps> = ({
                       }}
                     >
                       <TrendingUpIcon sx={{ color: pointDetails.cor, fontSize: 20, mt: 0.5 }} />
-                      <Typography variant="body2" sx={{ color: '#1e293b' }}>
+                      <Typography variant="body2" sx={{ color: colors.textPrimary }}>
                         {insight}
                       </Typography>
                     </Box>

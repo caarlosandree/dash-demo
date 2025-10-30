@@ -24,6 +24,7 @@ import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useState, useMemo } from 'react';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface Agendamento {
   id: number;
@@ -36,6 +37,7 @@ interface Agendamento {
 }
 
 const AgendamentosTable: React.FC = () => {
+  const { colors } = useThemeMode();
   // Função para gerar dados mockados
   const generateMockData = (): Agendamento[] => {
     const pacientes = [
@@ -218,13 +220,13 @@ const AgendamentosTable: React.FC = () => {
       elevation={0}
       sx={{
         p: 3,
-        bgcolor: '#ffffff',
-        border: '1px solid rgba(0, 0, 0, 0.08)',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
+        bgcolor: colors.chartBg,
+        border: `1px solid ${colors.cardBorder}`,
+        boxShadow: `0 2px 8px ${colors.cardBorder}`,
         transition: 'all 0.3s ease',
         '&:hover': {
           transform: 'translateY(-4px)',
-          boxShadow: '0 12px 24px rgba(0, 0, 0, 0.12)',
+          boxShadow: `0 12px 24px ${colors.cardBorder}`,
         },
       }}
     >
@@ -233,7 +235,7 @@ const AgendamentosTable: React.FC = () => {
           variant="h6"
           sx={{
             fontWeight: 700,
-            color: '#1e293b',
+            color: colors.textPrimary,
             mb: 0.5,
           }}
         >
@@ -242,7 +244,7 @@ const AgendamentosTable: React.FC = () => {
         <Typography
           variant="body2"
           sx={{
-            color: '#64748b',
+            color: colors.textSecondary,
             fontSize: '0.875rem',
             mb: 3,
           }}
@@ -256,14 +258,14 @@ const AgendamentosTable: React.FC = () => {
         sx={{
           mb: 3,
           p: 2,
-          bgcolor: '#f8fafc',
+          bgcolor: colors.chartBg,
           borderRadius: 2,
-          border: '1px solid rgba(0, 0, 0, 0.08)',
+          border: `1px solid ${colors.cardBorder}`,
         }}
       >
         <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
-          <FilterListIcon sx={{ color: '#64748b' }} />
-          <Typography variant="subtitle2" sx={{ color: '#64748b', fontWeight: 600 }}>
+          <FilterListIcon sx={{ color: colors.textSecondary }} />
+          <Typography variant="subtitle2" sx={{ color: colors.textSecondary, fontWeight: 600 }}>
             Filtros
           </Typography>
         </Stack>
@@ -280,20 +282,20 @@ const AgendamentosTable: React.FC = () => {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon sx={{ color: '#64748b' }} />
+                  <SearchIcon sx={{ color: colors.textSecondary }} />
                 </InputAdornment>
               ),
             }}
             sx={{
-              bgcolor: 'white',
+              bgcolor: colors.highlight,
               '& .MuiOutlinedInput-root': {
                 '&:hover fieldset': {
-                  borderColor: '#6366f1',
+                  borderColor: colors.primary,
                 },
               },
             }}
           />
-          <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 200 }, bgcolor: 'white' }}>
+          <FormControl size="small" sx={{ minWidth: { xs: '100%', sm: 200 }, bgcolor: colors.highlight }}>
             <InputLabel>Status</InputLabel>
             <Select
               value={filtroStatus}
@@ -322,11 +324,11 @@ const AgendamentosTable: React.FC = () => {
               shrink: true,
             }}
             sx={{
-              bgcolor: 'white',
+              bgcolor: colors.highlight,
               minWidth: { xs: '100%', sm: 180 },
               '& .MuiOutlinedInput-root': {
                 '&:hover fieldset': {
-                  borderColor: '#6366f1',
+                  borderColor: colors.primary,
                 },
               },
             }}
@@ -344,11 +346,11 @@ const AgendamentosTable: React.FC = () => {
               shrink: true,
             }}
             sx={{
-              bgcolor: 'white',
+              bgcolor: colors.highlight,
               minWidth: { xs: '100%', sm: 180 },
               '& .MuiOutlinedInput-root': {
                 '&:hover fieldset': {
-                  borderColor: '#6366f1',
+                  borderColor: colors.primary,
                 },
               },
             }}
@@ -363,7 +365,7 @@ const AgendamentosTable: React.FC = () => {
                 readOnly: true,
               }}
               sx={{
-                bgcolor: '#ef4444',
+                bgcolor: colors.secondary,
                 color: 'white',
                 minWidth: { xs: '100%', sm: 150 },
                 cursor: 'pointer',
@@ -374,12 +376,12 @@ const AgendamentosTable: React.FC = () => {
                   cursor: 'pointer',
                 },
                 '& .MuiOutlinedInput-notchedOutline': {
-                  borderColor: '#ef4444',
+                  borderColor: colors.secondary,
                 },
                 '&:hover': {
-                  bgcolor: '#dc2626',
+                  bgcolor: colors.secondary,
                   '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#dc2626',
+                    borderColor: colors.secondary,
                   },
                 },
               }}
@@ -391,7 +393,7 @@ const AgendamentosTable: React.FC = () => {
       <TableContainer
         sx={{
           borderRadius: 2,
-          border: '1px solid rgba(0, 0, 0, 0.08)',
+          border: `1px solid ${colors.cardBorder}`,
           maxHeight: 600,
           '& .MuiTable-root': {
             minWidth: 650,
@@ -403,60 +405,60 @@ const AgendamentosTable: React.FC = () => {
             <TableRow>
               <TableCell
                 sx={{
-                  bgcolor: '#f8fafc',
+                  bgcolor: colors.chartBg,
                   fontWeight: 700,
-                  color: '#1e293b',
-                  borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                  color: colors.textPrimary,
+                  borderBottom: `2px solid ${colors.cardBorder}`,
                 }}
               >
                 ID
               </TableCell>
               <TableCell
                 sx={{
-                  bgcolor: '#f8fafc',
+                  bgcolor: colors.chartBg,
                   fontWeight: 700,
-                  color: '#1e293b',
-                  borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                  color: colors.textPrimary,
+                  borderBottom: `2px solid ${colors.cardBorder}`,
                 }}
               >
                 Data
               </TableCell>
               <TableCell
                 sx={{
-                  bgcolor: '#f8fafc',
+                  bgcolor: colors.chartBg,
                   fontWeight: 700,
-                  color: '#1e293b',
-                  borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                  color: colors.textPrimary,
+                  borderBottom: `2px solid ${colors.cardBorder}`,
                 }}
               >
                 Paciente
               </TableCell>
               <TableCell
                 sx={{
-                  bgcolor: '#f8fafc',
+                  bgcolor: colors.chartBg,
                   fontWeight: 700,
-                  color: '#1e293b',
-                  borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                  color: colors.textPrimary,
+                  borderBottom: `2px solid ${colors.cardBorder}`,
                 }}
               >
                 Status
               </TableCell>
               <TableCell
                 sx={{
-                  bgcolor: '#f8fafc',
+                  bgcolor: colors.chartBg,
                   fontWeight: 700,
-                  color: '#1e293b',
-                  borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                  color: colors.textPrimary,
+                  borderBottom: `2px solid ${colors.cardBorder}`,
                 }}
               >
                 Profissional
               </TableCell>
               <TableCell
                 sx={{
-                  bgcolor: '#f8fafc',
+                  bgcolor: colors.chartBg,
                   fontWeight: 700,
-                  color: '#1e293b',
-                  borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                  color: colors.textPrimary,
+                  borderBottom: `2px solid ${colors.cardBorder}`,
                 }}
               >
                 Procedimento
@@ -467,7 +469,7 @@ const AgendamentosTable: React.FC = () => {
             {agendamentosPaginados.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
-                  <Typography variant="body2" sx={{ color: '#64748b' }}>
+                  <Typography variant="body2" sx={{ color: colors.textSecondary }}>
                     Nenhum agendamento encontrado com os filtros aplicados.
                   </Typography>
                 </TableCell>
@@ -478,25 +480,25 @@ const AgendamentosTable: React.FC = () => {
                   key={agendamento.id}
                   sx={{
                     '&:hover': {
-                      bgcolor: '#f8fafc',
+                      bgcolor: colors.chartBg,
                     },
                     '&:last-child td': {
                       borderBottom: 0,
                     },
                   }}
                 >
-                  <TableCell sx={{ color: '#64748b', fontWeight: 600 }}>
+                  <TableCell sx={{ color: colors.textSecondary, fontWeight: 600 }}>
                     #{agendamento.id}
                   </TableCell>
-                  <TableCell sx={{ color: '#1e293b' }}>{agendamento.data}</TableCell>
-                  <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                  <TableCell sx={{ color: colors.textPrimary }}>{agendamento.data}</TableCell>
+                  <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                     {agendamento.paciente}
                   </TableCell>
                   <TableCell>{getStatusChip(agendamento.status)}</TableCell>
-                  <TableCell sx={{ color: '#64748b' }}>
+                  <TableCell sx={{ color: colors.textSecondary }}>
                     {agendamento.profissional}
                   </TableCell>
-                  <TableCell sx={{ color: '#1e293b' }}>
+                  <TableCell sx={{ color: colors.textPrimary }}>
                     {agendamento.procedimento}
                   </TableCell>
                 </TableRow>
@@ -518,9 +520,9 @@ const AgendamentosTable: React.FC = () => {
         labelRowsPerPage="Itens por página:"
         labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count !== -1 ? count : `mais de ${to}`}`}
         sx={{
-          borderTop: '1px solid rgba(0, 0, 0, 0.08)',
+          borderTop: `1px solid ${colors.cardBorder}`,
           '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': {
-            color: '#64748b',
+            color: colors.textSecondary,
             fontWeight: 500,
           },
         }}

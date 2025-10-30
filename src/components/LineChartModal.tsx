@@ -22,6 +22,7 @@ import { LineChart as MuiLineChart } from '@mui/x-charts/LineChart';
 import { BarChart as MuiBarChart } from '@mui/x-charts/BarChart';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface LineChartModalProps {
   open: boolean;
@@ -50,9 +51,10 @@ const LineChartModal: React.FC<LineChartModalProps> = ({
   open, 
   onClose, 
   selectedMetric, 
-  data,
+  data, 
   metricDetails 
 }) => {
+  const { colors } = useThemeMode();
   return (
     <Dialog
       open={open}
@@ -72,7 +74,7 @@ const LineChartModal: React.FC<LineChartModalProps> = ({
           justifyContent: 'space-between',
           alignItems: 'center',
           pb: 2,
-          borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+          borderBottom: `1px solid ${colors.cardBorder}`,
           background: `linear-gradient(135deg, ${metricDetails.cor} 0%, ${metricDetails.cor}CC 100%)`,
           color: 'white',
         }}
@@ -111,8 +113,8 @@ const LineChartModal: React.FC<LineChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -130,8 +132,8 @@ const LineChartModal: React.FC<LineChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -156,8 +158,8 @@ const LineChartModal: React.FC<LineChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -175,8 +177,8 @@ const LineChartModal: React.FC<LineChartModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -204,7 +206,7 @@ const LineChartModal: React.FC<LineChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -249,7 +251,7 @@ const LineChartModal: React.FC<LineChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -291,7 +293,7 @@ const LineChartModal: React.FC<LineChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -309,30 +311,30 @@ const LineChartModal: React.FC<LineChartModalProps> = ({
                     <TableRow>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         Segmento
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         Valor
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         %
@@ -345,11 +347,11 @@ const LineChartModal: React.FC<LineChartModalProps> = ({
                         key={index}
                         sx={{
                           '&:hover': {
-                            bgcolor: '#f8fafc',
+                            bgcolor: colors.chartBg,
                           },
                         }}
                       >
-                        <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                        <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                           {segmento.segmento}
                         </TableCell>
                         <TableCell sx={{ color: '#64748b', fontWeight: 600 }}>
@@ -373,7 +375,7 @@ const LineChartModal: React.FC<LineChartModalProps> = ({
               sx={{
                 p: 3,
                 bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -391,40 +393,40 @@ const LineChartModal: React.FC<LineChartModalProps> = ({
                     <TableRow>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         Mês
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         Atual
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         Anterior
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.chartBg,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         Variação
@@ -437,11 +439,11 @@ const LineChartModal: React.FC<LineChartModalProps> = ({
                         key={index}
                         sx={{
                           '&:hover': {
-                            bgcolor: '#f8fafc',
+                            bgcolor: colors.chartBg,
                           },
                         }}
                       >
-                        <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                        <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                           {item.mes}
                         </TableCell>
                         <TableCell sx={{ color: '#64748b', fontWeight: 600 }}>

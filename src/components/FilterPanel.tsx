@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo, useCallback, useMemo } from 'react';
 import {
   Box,
   Paper,
@@ -108,7 +108,10 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFiltersChange, initialFilte
 
   useEffect(() => {
     onFiltersChange(filters);
-    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters]); // onFiltersChange removido das dependências para evitar loop infinito
+
+  useEffect(() => {
     // Contar filtros ativos
     let count = 0;
     if (filters.period.type !== 'last30days') count++;
@@ -121,50 +124,50 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFiltersChange, initialFilte
     if (filters.aggregation !== 'monthly') count++;
     
     setActiveFiltersCount(count);
-  }, [filters, onFiltersChange]);
+  }, [filters]);
 
-  const handlePeriodChange = (type: FilterState['period']['type']) => {
+  const handlePeriodChange = useCallback((type: FilterState['period']['type']) => {
     setFilters(prev => ({
       ...prev,
       period: { ...prev.period, type }
     }));
-  };
+  }, []);
 
-  const handleDateChange = (field: 'startDate' | 'endDate', date: Date | null) => {
+  const handleDateChange = useCallback((field: 'startDate' | 'endDate', date: Date | null) => {
     setFilters(prev => ({
       ...prev,
       period: { ...prev.period, [field]: date || undefined }
     }));
-  };
+  }, []);
 
-  const handleCategoriesChange = (newCategories: string[]) => {
+  const handleCategoriesChange = useCallback((newCategories: string[]) => {
     setFilters(prev => ({ ...prev, categories: newCategories }));
-  };
+  }, []);
 
-  const handleDataTypesChange = (newDataTypes: string[]) => {
+  const handleDataTypesChange = useCallback((newDataTypes: string[]) => {
     setFilters(prev => ({ ...prev, dataTypes: newDataTypes }));
-  };
+  }, []);
 
-  const handleChartTypesChange = (newChartTypes: string[]) => {
+  const handleChartTypesChange = useCallback((newChartTypes: string[]) => {
     setFilters(prev => ({ ...prev, chartTypes: newChartTypes }));
-  };
+  }, []);
 
-  const handleValueRangeChange = (_event: Event, newValue: number | number[]) => {
+  const handleValueRangeChange = useCallback((_event: Event, newValue: number | number[]) => {
     setFilters(prev => ({ 
       ...prev, 
       valueRange: newValue as [number, number] 
     }));
-  };
+  }, []);
 
-  const handleSwitchChange = (field: keyof Pick<FilterState, 'showTrends' | 'showProjections'>) => {
+  const handleSwitchChange = useCallback((field: keyof Pick<FilterState, 'showTrends' | 'showProjections'>) => {
     setFilters(prev => ({ ...prev, [field]: !prev[field] }));
-  };
+  }, []);
 
-  const handleAggregationChange = (aggregation: FilterState['aggregation']) => {
+  const handleAggregationChange = useCallback((aggregation: FilterState['aggregation']) => {
     setFilters(prev => ({ ...prev, aggregation }));
-  };
+  }, []);
 
-  const clearAllFilters = () => {
+  const clearAllFilters = useCallback(() => {
     setFilters({
       period: { type: 'last30days' },
       categories: ['Vendas', 'Receita', 'Produtos'],
@@ -175,11 +178,11 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFiltersChange, initialFilte
       showProjections: false,
       aggregation: 'monthly',
     });
-  };
+  }, []);
 
-  const resetToDefaults = () => {
+  const resetToDefaults = useCallback(() => {
     clearAllFilters();
-  };
+  }, [clearAllFilters]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ptBR}>
@@ -540,4 +543,4 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ onFiltersChange, initialFilte
   );
 };
 
-export default FilterPanel;
+export default memo(FilterPanel);

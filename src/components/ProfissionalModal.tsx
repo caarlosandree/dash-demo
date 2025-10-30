@@ -24,6 +24,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import SearchIcon from '@mui/icons-material/Search';
 import { BarChart as MuiBarChart } from '@mui/x-charts/BarChart';
 import { PieChart as MuiPieChart } from '@mui/x-charts/PieChart';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface Agendamento {
   id: number;
@@ -50,6 +51,7 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
   agendamentos,
   status,
 }) => {
+  const { colors } = useThemeMode();
   const isPresenca = status === 'Presença';
   
   // Estados para paginação e busca na tabela
@@ -163,7 +165,7 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
       PaperProps={{
         sx: {
           borderRadius: 3,
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+          boxShadow: `0 20px 60px ${colors.cardBorder}`,
           maxHeight: '90vh',
         },
       }}
@@ -174,7 +176,7 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
           justifyContent: 'space-between',
           alignItems: 'center',
           pb: 2,
-          borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+          borderBottom: `1px solid ${colors.cardBorder}`,
           background: isPresenca
             ? 'linear-gradient(135deg, #6366f1 0%, #818cf8 100%)'
             : 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)',
@@ -214,8 +216,8 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.highlight,
+                border: `1px solid ${colors.cardBorder}`,
                 height: '100%',
               }}
             >
@@ -237,8 +239,8 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.highlight,
+                border: `1px solid ${colors.cardBorder}`,
                 height: '100%',
               }}
             >
@@ -257,8 +259,8 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.highlight,
+                border: `1px solid ${colors.cardBorder}`,
                 height: '100%',
               }}
             >
@@ -277,8 +279,8 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
               sx={{
                 p: 2,
                 textAlign: 'center',
-                bgcolor: '#f8fafc',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.highlight,
+                border: `1px solid ${colors.cardBorder}`,
                 height: '100%',
               }}
             >
@@ -297,8 +299,8 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
               elevation={0}
               sx={{
                 p: 3,
-                bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -340,8 +342,8 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
               elevation={0}
               sx={{
                 p: 3,
-                bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Typography variant="h6" gutterBottom sx={{ mb: 2, fontWeight: 600 }}>
@@ -381,15 +383,15 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
               elevation={0}
               sx={{
                 p: 3,
-                bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.05)',
+                bgcolor: colors.chartBg,
+                border: `1px solid ${colors.cardBorder}`,
               }}
             >
               <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   Lista de Atendimentos
                 </Typography>
-                <Typography variant="body2" sx={{ color: '#64748b' }}>
+                <Typography variant="body2" sx={{ color: colors.textSecondary }}>
                   {agendamentosFiltrados.length} resultado(s)
                 </Typography>
               </Stack>
@@ -407,7 +409,7 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SearchIcon sx={{ color: '#64748b' }} />
+                      <SearchIcon sx={{ color: colors.textSecondary }} />
                     </InputAdornment>
                   ),
                 }}
@@ -424,7 +426,7 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
               <TableContainer
                 sx={{
                   borderRadius: 2,
-                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  border: `1px solid ${colors.cardBorder}`,
                   maxHeight: 400,
                 }}
               >
@@ -433,40 +435,40 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
                     <TableRow>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.highlight,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         ID
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.highlight,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         Data
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.highlight,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         Paciente
                       </TableCell>
                       <TableCell
                         sx={{
-                          bgcolor: '#f8fafc',
+                          bgcolor: colors.highlight,
                           fontWeight: 700,
-                          color: '#1e293b',
-                          borderBottom: '2px solid rgba(0, 0, 0, 0.12)',
+                          color: colors.textPrimary,
+                          borderBottom: `2px solid ${colors.cardBorder}`,
                         }}
                       >
                         Procedimento
@@ -477,7 +479,7 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
                     {agendamentosPaginados.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={4} align="center" sx={{ py: 4 }}>
-                          <Typography variant="body2" sx={{ color: '#64748b' }}>
+                          <Typography variant="body2" sx={{ color: colors.textSecondary }}>
                             Nenhum atendimento encontrado.
                           </Typography>
                         </TableCell>
@@ -488,18 +490,18 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
                           key={agendamento.id}
                           sx={{
                             '&:hover': {
-                              bgcolor: '#f8fafc',
+                              bgcolor: colors.highlight,
                             },
                           }}
                         >
-                          <TableCell sx={{ color: '#64748b', fontWeight: 600 }}>
+                          <TableCell sx={{ color: colors.textSecondary, fontWeight: 600 }}>
                             #{agendamento.id}
                           </TableCell>
-                          <TableCell sx={{ color: '#1e293b' }}>{agendamento.data}</TableCell>
-                          <TableCell sx={{ color: '#1e293b', fontWeight: 500 }}>
+                          <TableCell sx={{ color: colors.textPrimary }}>{agendamento.data}</TableCell>
+                          <TableCell sx={{ color: colors.textPrimary, fontWeight: 500 }}>
                             {agendamento.paciente}
                           </TableCell>
-                          <TableCell sx={{ color: '#1e293b' }}>
+                          <TableCell sx={{ color: colors.textPrimary }}>
                             {agendamento.procedimento}
                           </TableCell>
                         </TableRow>
@@ -521,10 +523,10 @@ const ProfissionalModal: React.FC<ProfissionalModalProps> = ({
                 labelRowsPerPage="Itens por página:"
                 labelDisplayedRows={({ from, to, count }) => `${from}-${to} de ${count !== -1 ? count : `mais de ${to}`}`}
                 sx={{
-                  borderTop: '1px solid rgba(0, 0, 0, 0.08)',
+                  borderTop: `1px solid ${colors.cardBorder}`,
                   mt: 0,
                   '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': {
-                    color: '#64748b',
+                    color: colors.textSecondary,
                     fontWeight: 500,
                   },
                 }}

@@ -15,6 +15,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import WebIcon from '@mui/icons-material/Web';
 import SparklineChartModal from './SparklineChartModal';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface SparklineMetric {
   id: string;
@@ -31,6 +32,7 @@ interface SparklineMetric {
 }
 
 const SparklineChart: React.FC = () => {
+  const { colors } = useThemeMode();
   const [openModal, setOpenModal] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState<string>('');
   const [selectedData, setSelectedData] = useState<any>(null);
@@ -304,8 +306,8 @@ const SparklineChart: React.FC = () => {
               sx={{
                 p: 3,
                 height: '100%',
-                bgcolor: '#ffffff',
-                border: '1px solid rgba(0, 0, 0, 0.08)',
+                bgcolor: colors.cardBg,
+                border: `1px solid ${colors.cardBorder}`,
                 borderRadius: 3,
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 position: 'relative',

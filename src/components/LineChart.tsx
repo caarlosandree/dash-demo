@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, memo, useMemo, useCallback } from 'react';
 import { Box, Typography, Stack, Chip } from '@mui/material';
 import { LineChart as MuiLineChart } from '@mui/x-charts/LineChart';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LineChartModal from './LineChartModal';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface SeriesData {
   id: string;
@@ -20,6 +21,7 @@ interface LineChartProps {
 }
 
 const LineChart: React.FC<LineChartProps> = ({ data: propData }) => {
+  const { colors } = useThemeMode();
   const [openModal, setOpenModal] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState<string>('');
   const [selectedData, setSelectedData] = useState<any>(null);
@@ -33,24 +35,27 @@ const LineChart: React.FC<LineChartProps> = ({ data: propData }) => {
 
   const chartData = propData || defaultData;
 
-  const data: SeriesData[] = [
+  const data: SeriesData[] = useMemo(() => [
     { id: 'vendas', label: 'Vendas', data: chartData.vendas },
     { id: 'receita', label: 'Receita', data: chartData.receita },
-  ].filter(series => series.data.length > 0); // Filtrar séries vazias
+  ].filter(series => series.data.length > 0), [chartData.vendas, chartData.receita]);
 
-  const xAxis = [
+  const xAxis = useMemo(() => [
     {
       data: chartData.meses,
       scaleType: 'point' as const,
     },
-  ];
+  ], [chartData.meses]);
 
-  const vendasVariacao = chartData.vendas.length > 1 
-    ? ((chartData.vendas[chartData.vendas.length - 1] - chartData.vendas[0]) / chartData.vendas[0] * 100).toFixed(1)
-    : '0.0';
-  const receitaVariacao = chartData.receita.length > 1 
-    ? ((chartData.receita[chartData.receita.length - 1] - chartData.receita[0]) / chartData.receita[0] * 100).toFixed(1)
-    : '0.0';
+  const vendasVariacao = useMemo(() => 
+    chartData.vendas.length > 1 
+      ? ((chartData.vendas[chartData.vendas.length - 1] - chartData.vendas[0]) / chartData.vendas[0] * 100).toFixed(1)
+      : '0.0', [chartData.vendas]);
+
+  const receitaVariacao = useMemo(() => 
+    chartData.receita.length > 1 
+      ? ((chartData.receita[chartData.receita.length - 1] - chartData.receita[0]) / chartData.receita[0] * 100).toFixed(1)
+      : '0.0', [chartData.receita]);
 
   // Dados detalhados para cada métrica
   const detailedData: Record<string, any> = {
@@ -105,7 +110,7 @@ const LineChart: React.FC<LineChartProps> = ({ data: propData }) => {
     },
   };
 
-  const handleLineClick = (event: any, itemIdentifier: any) => {
+  const handleLineClick = useCallback((event: any, itemIdentifier: any) => {
     const serieId = itemIdentifier?.dataIndex ?? itemIdentifier?.itemIndex ?? itemIdentifier?.index;
     const serieName = itemIdentifier?.seriesId;
     
@@ -114,13 +119,13 @@ const LineChart: React.FC<LineChartProps> = ({ data: propData }) => {
       setSelectedData(detailedData[serieName]);
       setOpenModal(true);
     }
-  };
+  }, [detailedData]);
 
-  const handleCloseModal = () => {
+  const handleCloseModal = useCallback(() => {
     setOpenModal(false);
     setSelectedMetric('');
     setSelectedData(null);
-  };
+  }, []);
 
   return (
     <Stack spacing={2} sx={{ height: '100%' }}>
@@ -130,7 +135,7 @@ const LineChart: React.FC<LineChartProps> = ({ data: propData }) => {
           variant="h6" 
           sx={{ 
             fontWeight: 700, 
-            color: '#1e293b',
+            color: colors.textPrimary,
             mb: 0.5,
           }}
         >
@@ -139,7 +144,7 @@ const LineChart: React.FC<LineChartProps> = ({ data: propData }) => {
         <Typography 
           variant="body2" 
           sx={{ 
-            color: '#64748b',
+            color: colors.textSecondary,
             fontSize: '0.875rem',
           }}
         >
@@ -153,12 +158,12 @@ const LineChart: React.FC<LineChartProps> = ({ data: propData }) => {
           sx={{
             flex: 1,
             p: 1.5,
-            bgcolor: '#818cf815',
+            bgcolor: colors.infoBg,
             borderRadius: 2,
-            border: '1px solid #818cf830',
+            border: `1px solid ${colors.primary}40`,
           }}
         >
-          <Typography variant="caption" sx={{ color: '#64748b', fontSize: '0.7rem', display: 'block' }}>
+          <Typography variant="caption" sx={{ color: colors.textSecondary, fontSize: '0.7rem', display: 'block' }}>
             Vendas
           </Typography>
           <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 0.5 }}>
@@ -172,12 +177,12 @@ const LineChart: React.FC<LineChartProps> = ({ data: propData }) => {
           sx={{
             flex: 1,
             p: 1.5,
-            bgcolor: '#f472b615',
+            bgcolor: colors.warningBg,
             borderRadius: 2,
-            border: '1px solid #f472b630',
+            border: `1px solid ${colors.secondary}40`,
           }}
         >
-          <Typography variant="caption" sx={{ color: '#64748b', fontSize: '0.7rem', display: 'block' }}>
+          <Typography variant="caption" sx={{ color: colors.textSecondary, fontSize: '0.7rem', display: 'block' }}>
             Receita
           </Typography>
           <Stack direction="row" spacing={0.5} alignItems="center" sx={{ mt: 0.5 }}>
@@ -193,10 +198,10 @@ const LineChart: React.FC<LineChartProps> = ({ data: propData }) => {
       <Box sx={{ 
         width: '100%', 
         height: 300,
-        bgcolor: '#f8fafc',
+        bgcolor: colors.chartBg,
         borderRadius: 2,
         p: 2,
-        border: '1px solid rgba(0, 0, 0, 0.05)',
+        border: `1px solid ${colors.cardBorder}`,
       }}>
         <MuiLineChart
           width={undefined}
@@ -211,7 +216,6 @@ const LineChart: React.FC<LineChartProps> = ({ data: propData }) => {
           colors={['#818cf8', '#f472b6']}
           xAxis={xAxis}
           margin={{ top: 10, bottom: 20, left: 30, right: 30 }}
-          onItemClick={handleLineClick}
           slotProps={{
             line: {
               cursor: 'pointer',
@@ -238,5 +242,5 @@ const LineChart: React.FC<LineChartProps> = ({ data: propData }) => {
   );
 };
 
-export default LineChart;
+export default memo(LineChart);
 

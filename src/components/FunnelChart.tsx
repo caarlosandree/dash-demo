@@ -4,6 +4,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import { useMemo } from 'react';
 import FunnelChartModal from './FunnelChartModal';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface FunnelData {
   id: number;
@@ -15,6 +16,7 @@ interface FunnelData {
 }
 
 const FunnelChart: React.FC = () => {
+  const { colors } = useThemeMode();
   const [openModal, setOpenModal] = useState(false);
   const [selectedStage, setSelectedStage] = useState<string>('');
   const [selectedData, setSelectedData] = useState<any>(null);
@@ -194,7 +196,7 @@ const FunnelChart: React.FC = () => {
           variant="h6" 
           sx={{ 
             fontWeight: 700, 
-            color: '#1e293b',
+            color: colors.textPrimary,
             mb: 0.5,
           }}
         >
@@ -203,7 +205,7 @@ const FunnelChart: React.FC = () => {
         <Typography 
           variant="body2" 
           sx={{ 
-            color: '#64748b',
+            color: colors.textSecondary,
             fontSize: '0.875rem',
           }}
         >
@@ -247,10 +249,10 @@ const FunnelChart: React.FC = () => {
       {/* Gráfico Funil */}
       <Box sx={{ 
         width: '100%',
-        bgcolor: '#f8fafc',
+        bgcolor: colors.chartBg,
         borderRadius: 2,
         p: 3,
-        border: '1px solid rgba(0, 0, 0, 0.05)',
+        border: `1px solid ${colors.cardBorder}`,
       }}>
         <Stack spacing={1}>
           {data.map((item, index) => (

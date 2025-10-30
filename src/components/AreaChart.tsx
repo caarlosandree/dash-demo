@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Box, Typography, Stack, Chip } from '@mui/material';
+import { Box, Typography, Stack } from '@mui/material';
 import { LineChart as MuiAreaChart } from '@mui/x-charts/LineChart';
 import PeopleIcon from '@mui/icons-material/People';
 import GroupIcon from '@mui/icons-material/Group';
 import { useMemo } from 'react';
 import AreaChartModal from './AreaChartModal';
+import { useThemeMode } from '../hooks/useThemeMode';
 
 interface AreaData {
   id: string;
@@ -13,6 +14,7 @@ interface AreaData {
 }
 
 const AreaChart: React.FC = () => {
+  const { colors } = useThemeMode();
   const [openModal, setOpenModal] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState<string>('');
   const [selectedData, setSelectedData] = useState<any>(null);
@@ -107,8 +109,7 @@ const AreaChart: React.FC = () => {
     },
   };
 
-  const handleAreaClick = (event: any, itemIdentifier: any) => {
-    const serieId = itemIdentifier?.dataIndex ?? itemIdentifier?.itemIndex ?? itemIdentifier?.index;
+  const handleAreaClick = (_event: any, itemIdentifier: any) => {
     const serieName = itemIdentifier?.seriesId;
     
     if (serieName && detailedData[serieName]) {
@@ -132,7 +133,7 @@ const AreaChart: React.FC = () => {
           variant="h6" 
           sx={{ 
             fontWeight: 700, 
-            color: '#1e293b',
+            color: colors.textPrimary,
             mb: 0.5,
           }}
         >
@@ -141,7 +142,7 @@ const AreaChart: React.FC = () => {
         <Typography 
           variant="body2" 
           sx={{ 
-            color: '#64748b',
+            color: colors.textSecondary,
             fontSize: '0.875rem',
           }}
         >
@@ -176,10 +177,10 @@ const AreaChart: React.FC = () => {
             <PeopleIcon sx={{ fontSize: 20 }} />
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: '#64748b', fontSize: '0.7rem', display: 'block' }}>
+            <Typography variant="caption" sx={{ color: colors.textSecondary, fontSize: '0.7rem', display: 'block' }}>
               Total Semanal
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 700, color: '#1e293b' }}>
+            <Typography variant="h6" sx={{ fontWeight: 700, color: colors.textPrimary }}>
               {totalUsuarios.toLocaleString('pt-BR')}
             </Typography>
           </Box>
@@ -188,9 +189,9 @@ const AreaChart: React.FC = () => {
           sx={{
             flex: 1,
             p: 1.5,
-            bgcolor: '#f472b615',
+            bgcolor: colors.warningBg,
             borderRadius: 2,
-            border: '1px solid #f472b630',
+            border: `1px solid ${colors.secondary}40`,
             display: 'flex',
             alignItems: 'center',
             gap: 1,
@@ -209,7 +210,7 @@ const AreaChart: React.FC = () => {
             <GroupIcon sx={{ fontSize: 20 }} />
           </Box>
           <Box>
-            <Typography variant="caption" sx={{ color: '#64748b', fontSize: '0.7rem', display: 'block' }}>
+            <Typography variant="caption" sx={{ color: colors.textSecondary, fontSize: '0.7rem', display: 'block' }}>
               Crescimento
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 700, color: '#10b981' }}>
@@ -223,10 +224,10 @@ const AreaChart: React.FC = () => {
       <Box sx={{ 
         width: '100%', 
         height: 300,
-        bgcolor: '#f8fafc',
+        bgcolor: colors.chartBg,
         borderRadius: 2,
         p: 2,
-        border: '1px solid rgba(0, 0, 0, 0.05)',
+        border: `1px solid ${colors.cardBorder}`,
       }}>
         <MuiAreaChart
           width={undefined}
@@ -242,9 +243,9 @@ const AreaChart: React.FC = () => {
           colors={['#818cf8', '#f472b6']}
           xAxis={xAxis}
           margin={{ top: 10, bottom: 20, left: 30, right: 30 }}
-          onItemClick={handleAreaClick}
+          onLineClick={handleAreaClick}
           slotProps={{
-            area: {
+            line: {
               cursor: 'pointer',
             },
           }}
